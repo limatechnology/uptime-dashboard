@@ -10,6 +10,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "LimaUP | Dashboard de Uptime",
   description: "Monitoreo en tiempo real de servicios globales",
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({

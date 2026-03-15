@@ -156,13 +156,20 @@ export function Dashboard() {
 
       {/* Sidebar Menú */}
       <aside className="w-68 border-r border-card-border bg-background-main hidden lg:flex flex-col p-7 gap-9 sticky top-0 h-screen overflow-hidden">
-        <div className="flex items-center gap-2.5 animate-slide-left">
-           <div className="w-9 h-9 rounded-xl border border-lima-green flex items-center justify-center bg-lima-green/5 shadow-[0_0_15px_rgba(184,245,0,0.1)]">
-             <Server className="w-5 h-5 text-lima-green" />
-           </div>
-           <h1 className="text-2xl font-black tracking-tighter uppercase text-white">
-             LimaUP<span className="text-lima-green">.</span>
-           </h1>
+        <div className="flex animate-slide-left mb-2">
+           <svg width="180" height="52" viewBox="0 0 180 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+             <rect width="180" height="52" rx="14" fill="#101010"/>
+             <rect x="10" y="8" width="36" height="36" rx="9" fill="#1a1a1a" stroke="#B8F500" strokeWidth="1.2"/>
+             <circle cx="28" cy="26" r="11" fill="none" stroke="#B8F500" strokeWidth="1.4"/>
+             <line x1="28" y1="15" x2="28" y2="37" stroke="#B8F500" strokeWidth="1"/>
+             <line x1="17" y1="26" x2="39" y2="26" stroke="#B8F500" strokeWidth="1"/>
+             <line x1="20" y1="18" x2="36" y2="34" stroke="#B8F500" strokeWidth="1"/>
+             <line x1="20" y1="34" x2="36" y2="18" stroke="#B8F500" strokeWidth="1"/>
+             <text x="58" y="32" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize="15" fontWeight="700" fill="white" letterSpacing="1.5">LIMA</text>
+             <text x="103" y="32" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize="15" fontWeight="700" fill="#B8F500" letterSpacing="1">UP</text>
+             <circle cx="128" cy="32" r="2.5" fill="#B8F500" opacity="0.9"/>
+             <line x1="57" y1="38" x2="134" y2="38" stroke="#B8F500" strokeWidth="0.4" opacity="0.25"/>
+           </svg>
         </div>
 
         <nav className="flex flex-col gap-2.5">
