@@ -42,9 +42,14 @@ async function getGoogleCloudStatus() {
   try {
     const res = await fetch('https://status.cloud.google.com/incidents.json', { next: { revalidate: 60 } });
     const incidents = await res.json();
-    const active = incidents.filter((i: any) => i.status !== 'RESOLVED');
-    if (active.length < 5) return 'online'; // Solo warning si hay 5+ incidentes
-    return 'warning';
+    const active = incidents.filter((i: any) => {
+      // Activos son aquellos que no han terminado o cuyo estado más reciente no es AVAILABLE
+      return !i.end || (i.most_recent_update && i.most_recent_update.status !== 'AVAILABLE');
+    });
+    
+    if (active.length === 0) return 'online';
+    if (active.length > 0 && active.length <= 2) return 'warning';
+    return 'warning'; // 3+ también es warning, no offline
   } catch (e) {
     return 'online';
   }
