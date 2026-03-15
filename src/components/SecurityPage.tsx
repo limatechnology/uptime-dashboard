@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   ShieldAlert, 
   Lock, 
@@ -17,36 +17,81 @@ import {
 } from "lucide-react";
 import { INITIAL_SERVICES } from "@/lib/constants";
 
-type Tab = "leaks" | "tips" | "consultancy";
+type Tab = "leaks" | "news" | "tips" | "consultancy";
 
 const KNOWN_BREACHES: Record<string, { title: string, description: string, date: string, severity: "critical" | "high" | "medium" | "low", severityLevel: number }> = {
-  facebook: {
-    title: "Filtración masiva 2021",
-    description: "533 millones de números de teléfono y datos personales expuestos",
-    date: "Abril 2021",
-    severity: "critical",
-    severityLevel: 0
+  microsoft: {
+    title: "Acceso no autorizado - Midnight Blizzard",
+    description: "Grupo ruso accedió a emails corporativos de Microsoft",
+    date: "2024-01-12",
+    severity: "high",
+    severityLevel: 1
   },
   twitter: {
-    title: "Filtración de emails 2022",
+    title: "Filtración de datos de usuarios",
     description: "200 millones de emails expuestos en foro de hackers",
-    date: "Enero 2023",
+    date: "2023-01-04",
     severity: "high",
     severityLevel: 1
   },
-  microsoft: {
-    title: "Acceso no autorizado 2024",
-    description: "Grupo Midnight Blizzard accedió a emails corporativos",
-    date: "Enero 2024",
-    severity: "high",
-    severityLevel: 1
-  },
-  instagram: {
-    title: "Scraping masivo 2021", 
-    description: "Datos públicos de millones de perfiles recolectados",
-    date: "2021",
+  facebook: {
+    title: "Exposición de datos - Meta",
+    description: "Datos de cuentas expuestos por configuración incorrecta",
+    date: "2024-04-01",
     severity: "medium",
     severityLevel: 2
+  },
+  discord: {
+    title: "Breach via proveedor tercero",
+    description: "Datos de usuarios expuestos a través de proveedor de soporte",
+    date: "2023-05-12",
+    severity: "medium",
+    severityLevel: 2
+  },
+  openai: {
+    title: "Filtración de conversaciones",
+    description: "Bug expuso títulos de conversaciones de otros usuarios",
+    date: "2024-03-20",
+    severity: "low",
+    severityLevel: 3
+  }
+};
+
+const isBreachRecent = (dateStr: string) => {
+  const twelveMonthsAgo = new Date();
+  twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12);
+  const breachDate = new Date(dateStr);
+  return !isNaN(breachDate.getTime()) && breachDate > twelveMonthsAgo;
+};
+
+const formatBreachDate = (dateStr: string) => {
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return dateStr;
+  const formatted = date.toLocaleDateString('es-AR', { month: 'long', year: 'numeric' });
+  return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+};
+
+const getRelativeTime = (dateStr: string, lang: 'es' | 'en') => {
+  const date = new Date(dateStr);
+  const diffInSeconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+  
+  const days = Math.floor(diffInSeconds / 86400);
+  const weeks = Math.floor(days / 7);
+  const months = Math.floor(days / 30);
+  const years = Math.floor(days / 365);
+  
+  if (lang === 'es') {
+    if (years > 0) return `hace ${years} ${years === 1 ? 'año' : 'años'}`;
+    if (months > 0) return `hace ${months} ${months === 1 ? 'mes' : 'meses'}`;
+    if (weeks > 0) return `hace ${weeks} ${weeks === 1 ? 'semana' : 'semanas'}`;
+    if (days > 0) return `hace ${days} ${days === 1 ? 'día' : 'días'}`;
+    return 'hoy';
+  } else {
+    if (years > 0) return `${years} ${years === 1 ? 'year' : 'years'} ago`;
+    if (months > 0) return `${months} ${months === 1 ? 'month' : 'months'} ago`;
+    if (weeks > 0) return `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`;
+    if (days > 0) return `${days} ${days === 1 ? 'day' : 'days'} ago`;
+    return 'today';
   }
 };
 
@@ -105,6 +150,21 @@ const FAQS = [
 export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
   const [activeTab, setActiveTab] = useState<Tab>("leaks");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [news, setNews] = useState<any[]>([]);
+  const [loadingNews, setLoadingNews] = useState(false);
+
+  useEffect(() => {
+    if (activeTab === 'news' && news.length === 0) {
+      setLoadingNews(true);
+      fetch('/api/security-news')
+        .then(res => res.json())
+        .then(data => {
+            setNews(data.articles || []);
+        })
+        .catch(err => console.error("Error fetching news:", err))
+        .finally(() => setLoadingNews(false));
+    }
+  }, [activeTab, news.length]);
 
   const getSeverityPillStyle = (severity?: string) => {
     switch (severity) {
@@ -137,10 +197,14 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
   };
 
   const sortedLeaks = [...INITIAL_SERVICES].sort((a, b) => {
-    const aLeak = KNOWN_BREACHES[a.id];
-    const bLeak = KNOWN_BREACHES[b.id];
-    const aLevel = aLeak ? aLeak.severityLevel : 4;
-    const bLevel = bLeak ? bLeak.severityLevel : 4;
+    const aLeakInfo = KNOWN_BREACHES[a.id];
+    const bLeakInfo = KNOWN_BREACHES[b.id];
+    
+    const aValid = aLeakInfo && isBreachRecent(aLeakInfo.date);
+    const bValid = bLeakInfo && isBreachRecent(bLeakInfo.date);
+
+    const aLevel = aValid ? aLeakInfo.severityLevel : 4;
+    const bLevel = bValid ? bLeakInfo.severityLevel : 4;
     return aLevel - bLevel;
   });
 
@@ -150,6 +214,7 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
       <div className="flex items-center gap-2 p-1 bg-background-main border border-card-border rounded-2xl w-fit">
         {[
           { id: 'leaks', label: lang === 'es' ? 'Filtraciones' : 'Breaches' },
+          { id: 'news', label: lang === 'es' ? 'Noticias' : 'News' },
           { id: 'tips', label: lang === 'es' ? 'Consejos' : 'Tips' },
           { id: 'consultancy', label: lang === 'es' ? 'Asesoría' : 'Consultancy' }
         ].map(tab => (
@@ -172,7 +237,8 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
         {activeTab === 'leaks' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in">
             {sortedLeaks.map(service => {
-              const breach = KNOWN_BREACHES[service.id];
+              const rawBreach = KNOWN_BREACHES[service.id];
+              const breach = rawBreach && isBreachRecent(rawBreach.date) ? rawBreach : null;
               const severityInfo = breach ? getSeverityLabel(breach.severity) : null;
               
               return (
@@ -211,7 +277,7 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
                        <div className={`p-4 rounded-2xl border ${getSeverityStyle(breach.severity)}`}>
                          <div className="flex items-center justify-between mb-2">
                            <span className="text-[10px] font-black uppercase tracking-widest opacity-90">{breach.title}</span>
-                           <span className="text-[10px] font-bold opacity-50">{breach.date}</span>
+                           <span className="text-[10px] font-bold opacity-50">{formatBreachDate(breach.date)}</span>
                          </div>
                          
                          <p className="text-[11px] leading-relaxed font-semibold opacity-80">{breach.description}</p>
@@ -220,7 +286,7 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
                   ) : (
                     <div className="pt-2 min-h-[80px] flex items-center">
                       <p className="text-[11px] text-zinc-500 font-medium leading-relaxed">
-                        No se han detectado incidentes de seguridad públicos asociados a este servicio.
+                        {lang === 'es' ? 'No se han detectado incidentes de seguridad públicos asociados a este servicio en los últimos 12 meses.' : 'No public security incidents associated with this service have been detected in the last 12 months.'}
                       </p>
                     </div>
                   )}
@@ -245,6 +311,96 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {activeTab === 'news' && (
+          <div className="flex flex-col gap-6 animate-in">
+            {loadingNews && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="bg-card-bg border border-card-border p-6 rounded-3xl flex flex-col gap-4 animate-pulse h-[200px]">
+                     <div className="flex items-center gap-2">
+                       <div className="w-8 h-5 bg-white/5 rounded-md"></div>
+                       <div className="w-24 h-5 bg-white/5 rounded-md"></div>
+                     </div>
+                     <div className="w-full h-10 bg-white/5 rounded-md mt-2"></div>
+                     <div className="w-full h-8 bg-white/5 rounded-md"></div>
+                     <div className="mt-auto w-32 h-4 bg-white/5 rounded-md"></div>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {!loadingNews && news.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {news.map((article, idx) => {
+                  let catStyle = '';
+                  let catLabel = '';
+                  switch(article.category) {
+                    case 'breach': 
+                      catStyle = 'bg-[#ef4444]/10 text-[#ef4444] border-[#ef4444]/20'; 
+                      catLabel = lang === 'es' ? 'Filtración' : 'Breach'; 
+                      break;
+                    case 'vulnerability': 
+                      catStyle = 'bg-[#f97316]/10 text-[#f97316] border-[#f97316]/20'; 
+                      catLabel = lang === 'es' ? 'Vulnerabilidad' : 'Vulnerability'; 
+                      break;
+                    case 'ransomware': 
+                      catStyle = 'bg-[#dc2626]/10 text-[#dc2626] border-[#dc2626]/20'; 
+                      catLabel = 'Ransomware'; 
+                      break;
+                    case 'general': 
+                    default: 
+                      catStyle = 'bg-[#6C63FF]/10 text-[#6C63FF] border-[#6C63FF]/20'; 
+                      catLabel = 'General'; 
+                      break;
+                  }
+
+                  return (
+                    <a 
+                      key={idx} 
+                      href={article.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-card-bg border border-card-border p-6 rounded-3xl flex flex-col gap-4 hover:border-[#6C63FF]/40 transition-all duration-300 shadow-sm group min-h-[200px] h-full"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex flex-wrap items-center gap-2">
+                           {article.lang === 'es' ? (
+                              <span className="bg-[#B8F500]/20 text-[#B8F500] px-2 py-0.5 rounded-[6px] text-[10px] font-black uppercase tracking-widest shrink-0">ES</span>
+                            ) : (
+                              <span className="bg-zinc-500/20 text-zinc-400 px-2 py-0.5 rounded-[6px] text-[10px] font-black uppercase tracking-widest shrink-0">EN</span>
+                            )}
+                            <span className={`border px-2 py-0.5 rounded-[6px] text-[10px] font-bold uppercase tracking-widest ${catStyle}`}>
+                              {catLabel}
+                            </span>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-zinc-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </div>
+                      
+                      <div className="space-y-2">
+                         <h3 className="text-white font-semibold text-sm leading-snug line-clamp-2 group-hover:text-[#6C63FF] transition-colors">{article.title}</h3>
+                         <p className="text-zinc-400 text-xs leading-relaxed line-clamp-2" title={article.description}>{article.description}</p>
+                      </div>
+
+                      <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between">
+                        <span className="text-[11px] font-semibold text-zinc-500 truncate pr-2 opacity-80">{article.source}</span>
+                        <span className="text-[11px] font-medium text-zinc-500 shrink-0 opacity-80 capitalize">{getRelativeTime(article.publishedAt, lang)}</span>
+                      </div>
+                    </a>
+                  )
+                })}
+              </div>
+            )}
+            
+            {!loadingNews && news.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-20 bg-card-bg border border-card-border rounded-3xl">
+                  <span className="text-zinc-500 font-medium">
+                    {lang === 'es' ? 'No hay noticias recientes.' : 'No recent news.'}
+                  </span>
+                </div>
+            )}
           </div>
         )}
 
