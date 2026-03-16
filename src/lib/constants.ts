@@ -60,7 +60,7 @@ export const TRANSLATIONS = {
     degraded: "Problemas",
     down: "Caído",
     checking: "Verificando...",
-    noIssues: "Sin reportes de problemas",
+    noIssues: "Sin reportes de problemas de seguridad",
     warningMsg: "Algunos usuarios reportan fallas",
     offlineMsg: "No responde · revisando",
     allGood: "Todo funciona con normalidad",

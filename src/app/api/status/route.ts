@@ -13,6 +13,7 @@ const PUBLIC_STATUS_PAGES = {
   microsoft: 'https://azure.status.microsoft/api/v2/status.json',
   twitter: 'https://api.twitterstat.us/api/v2/status.json',
   battlenet: 'https://status.blizzard.com/api/v2/status.json',
+  kick: 'https://status.kick.com/api/v2/status.json',
 };
 
 async function getAtlassianStatus(url: string, serviceKey?: string) {
@@ -121,7 +122,6 @@ export async function GET() {
     movistarStatus,
     telegramStatus,
     signalStatus,
-    kickStatus,
   ] = await Promise.all([
     Promise.all(atlassianPromises),
     getGoogleCloudStatus(),
@@ -135,7 +135,6 @@ export async function GET() {
     getPingStatus('https://www.movistar.com.ar'),
     getPingStatus('https://telegram.org'),
     getPingStatus('https://signal.org'),
-    getPingStatus('https://kick.com'),
   ]);
 
   const statusMap: Record<string, string> = Object.fromEntries(atlassianResults);
@@ -153,7 +152,6 @@ export async function GET() {
   statusMap['movistar'] = movistarStatus;
   statusMap['telegram'] = telegramStatus;
   statusMap['signal'] = signalStatus;
-  statusMap['kick'] = kickStatus;
 
   // Falsos positivos: forzar online en servicios críticos si están en warning
   const ALWAYS_ONLINE = ['vercel', 'cloudflare'];
