@@ -170,6 +170,17 @@ export function Dashboard() {
     return t.allGood;
   };
 
+  const handleRefresh = () => {
+    if (activeMenu === 'dashboard') {
+      fetchStatus(true);
+    } else {
+      fetchNotifications();
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
+      window.dispatchEvent(new CustomEvent('refresh-security'));
+    }
+  };
+
   if (!mounted) return null;
 
   return (
@@ -271,7 +282,7 @@ export function Dashboard() {
               
               <div className="flex items-center gap-4">
                 <button 
-                  onClick={() => (activeMenu === 'dashboard' ? fetchStatus(true) : window.location.reload())}
+                  onClick={handleRefresh}
                   disabled={isRefreshing}
                   className="p-3 rounded-xl border border-card-border bg-card-bg hover:border-it-blue/40 transition-all group active:scale-90 disabled:opacity-50 shadow-sm"
                 >

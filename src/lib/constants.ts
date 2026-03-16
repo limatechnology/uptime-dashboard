@@ -3,7 +3,7 @@ import { Service } from "@/types";
 export const INITIAL_SERVICES: Service[] = [
   // TELECOMUNICACIONES
   { id: 'movistar', name: 'Movistar Argentina', type: 'proxy', displayUrl: 'movistar.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(22), group: 'Telecomunicaciones' },
-  { id: 'flow', name: 'Personal Flow', type: 'proxy', displayUrl: 'flow.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(45), group: 'Telecomunicaciones' },
+  { id: 'flow', name: 'Personal Flow', type: 'proxy', displayUrl: 'personalflow.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(45), group: 'Telecomunicaciones' },
   { id: 'personal', name: 'Personal Argentina', type: 'proxy', displayUrl: 'personal.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(15), group: 'Telecomunicaciones' },
   { id: 'claro', name: 'Claro Argentina', type: 'proxy', displayUrl: 'claro.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(18), group: 'Telecomunicaciones' },
   { id: 'starlink', name: 'Starlink', type: 'proxy', displayUrl: 'starlink.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(50), group: 'Telecomunicaciones' },

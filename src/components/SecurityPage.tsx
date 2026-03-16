@@ -154,7 +154,7 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
   const [loadingNews, setLoadingNews] = useState(false);
 
   useEffect(() => {
-    if (activeTab === 'news' && news.length === 0) {
+    const refreshNews = () => {
       setLoadingNews(true);
       fetch('/api/security-news')
         .then(res => res.json())
@@ -163,7 +163,14 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
         })
         .catch(err => console.error("Error fetching news:", err))
         .finally(() => setLoadingNews(false));
+    };
+
+    if (activeTab === 'news' && news.length === 0) {
+      refreshNews();
     }
+
+    window.addEventListener('refresh-security', refreshNews);
+    return () => window.removeEventListener('refresh-security', refreshNews);
   }, [activeTab, news.length]);
 
   const getSeverityPillStyle = (severity?: string) => {
