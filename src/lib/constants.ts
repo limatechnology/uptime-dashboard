@@ -22,12 +22,12 @@ export const INITIAL_SERVICES: Service[] = [
   // DESARROLLO
   { id: 'github', name: 'GitHub', type: 'public', displayUrl: 'github.com', endpoint: 'https://www.githubstatus.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(25), group: 'Desarrollo' },
   { id: 'vercel', name: 'Vercel', type: 'public', displayUrl: 'vercel-status.com', endpoint: 'https://www.vercel-status.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(15), group: 'Desarrollo' },
-  { id: 'cloudflare', name: 'Cloudflare', type: 'public', displayUrl: 'cloudflarestatus.com', endpoint: 'https://www.cloudflarestatus.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(10), group: 'Desarrollo' },
 
-  // TECNOLOGÍA
-  { id: 'aws', name: 'Amazon Web Services', type: 'proxy', displayUrl: 'health.aws.amazon.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(15), group: 'Tecnología' },
-  { id: 'google', name: 'Google Cloud / Services', type: 'proxy', displayUrl: 'google.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(10), group: 'Tecnología' },
-  { id: 'microsoft', name: 'Microsoft 365', type: 'proxy', displayUrl: 'office.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(35), group: 'Tecnología' },
+  // INFRAESTRUCTURA
+  { id: 'cloudflare', name: 'Cloudflare', type: 'public', displayUrl: 'cloudflarestatus.com', endpoint: 'https://www.cloudflarestatus.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(10), group: 'Infraestructura' },
+  { id: 'aws', name: 'Amazon Web Services', type: 'proxy', displayUrl: 'health.aws.amazon.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(15), group: 'Infraestructura' },
+  { id: 'google', name: 'Google Cloud / Services', type: 'proxy', displayUrl: 'google.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(10), group: 'Infraestructura' },
+  { id: 'microsoft', name: 'Microsoft 365', type: 'proxy', displayUrl: 'office.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(35), group: 'Infraestructura' },
   
   // IA
   { id: 'openai', name: 'OpenAI / ChatGPT', type: 'public', displayUrl: 'openai.com', endpoint: 'https://status.openai.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(45), group: 'IA' },
@@ -36,6 +36,7 @@ export const INITIAL_SERVICES: Service[] = [
   // STREAMING
   { id: 'youtube', name: 'YouTube', type: 'proxy', displayUrl: 'youtube.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(20), group: 'Streaming' },
   { id: 'twitch', name: 'Twitch', type: 'public', displayUrl: 'twitch.tv', endpoint: 'https://status.twitch.tv/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(35), group: 'Streaming' },
+  { id: 'kik', name: 'Kik Interactive', type: 'proxy', displayUrl: 'kik.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(40), group: 'Streaming' },
 
   // JUEGOS
   { id: 'steam', name: 'Steam', type: 'proxy', displayUrl: 'steampowered.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(30), group: 'Juegos' },
@@ -78,7 +79,7 @@ export const TRANSLATIONS = {
     games: "Juegos",
     streaming: "Streaming",
     ai: "IA",
-    tech: "Tecnología",
+    infra: "Infraestructura",
     telecom: "Telecomunicaciones",
     dev: "Desarrollo",
     createdBy: "Creado por",
@@ -112,7 +113,7 @@ export const TRANSLATIONS = {
     games: "Games",
     streaming: "Streaming",
     ai: "AI",
-    tech: "Technology",
+    infra: "Infrastructure",
     telecom: "Telecommunications",
     dev: "Development",
     createdBy: "Created by",

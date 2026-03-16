@@ -11,7 +11,7 @@ export interface Service {
   latencyHistory: number[]; // Store recent latency points
   lastUpdated?: string;
   history: number[]; // 0 to 1 values for uptime
-  group: 'IA' | 'Mensajería' | 'Redes Sociales' | 'Tecnología' | 'Streaming' | 'Juegos' | 'Telecomunicaciones' | 'Desarrollo';
+  group: 'IA' | 'Mensajería' | 'Redes Sociales' | 'Infraestructura' | 'Streaming' | 'Juegos' | 'Telecomunicaciones' | 'Desarrollo';
 }
 
 export interface DashboardData {

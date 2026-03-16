@@ -30,8 +30,8 @@ export function Dashboard() {
     { id: 'Mensajería', label: t.messaging },
     { id: 'Juegos', label: t.games },
     { id: 'Streaming', label: t.streaming },
+    { id: 'Infraestructura', label: t.infra },
     { id: 'IA', label: t.ai },
-    { id: 'Tecnología', label: t.tech },
   ];
 
   const [services, setServices] = useState<Service[]>(INITIAL_SERVICES);
