@@ -170,14 +170,17 @@ export function Dashboard() {
     return t.allGood;
   };
 
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
     if (activeMenu === 'dashboard') {
-      fetchStatus(true);
+      await fetchStatus(true);
     } else {
-      fetchNotifications();
+      await fetchNotifications();
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
       window.dispatchEvent(new CustomEvent('refresh-security'));
+      // Simulamos carga para que se vea la animación
+      setTimeout(() => setIsRefreshing(false), 800);
     }
   };
 

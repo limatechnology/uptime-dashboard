@@ -51,6 +51,10 @@ export function StatusCard({ service, isLoading: isGlobalLoading, lang }: Props)
                 .replace('health.aws.amazon.com', 'aws.amazon.com')
                 .replace('vercel-status.com', 'vercel.com')
                 .replace('cloudflarestatus.com', 'cloudflare.com')
+                .replace('personalflow.com.ar', 'flow.com.ar')
+                .replace('movistar.com.ar', 'movistar.com')
+                .replace('claro.com.ar', 'claro.com.ar')
+                .replace('personal.com.ar', 'personal.com.ar')
               }&size=128`}
               alt={service.name}
               className="w-full h-full object-contain rounded-md"
