@@ -119,6 +119,8 @@ export async function GET() {
     personalStatus,
     claroStatus,
     movistarStatus,
+    telegramStatus,
+    signalStatus,
   ] = await Promise.all([
     Promise.all(atlassianPromises),
     getGoogleCloudStatus(),
@@ -130,6 +132,8 @@ export async function GET() {
     getPingStatus('https://www.personal.com.ar'),
     getPingStatus('https://www.claro.com.ar'),
     getPingStatus('https://www.movistar.com.ar'),
+    getPingStatus('https://telegram.org'),
+    getPingStatus('https://signal.org'),
   ]);
 
   const statusMap: Record<string, string> = Object.fromEntries(atlassianResults);
@@ -145,6 +149,8 @@ export async function GET() {
   statusMap['personal'] = personalStatus;
   statusMap['claro'] = claroStatus;
   statusMap['movistar'] = movistarStatus;
+  statusMap['telegram'] = telegramStatus;
+  statusMap['signal'] = signalStatus;
 
   // Falsos positivos: forzar online en servicios críticos si están en warning
   const ALWAYS_ONLINE = ['vercel', 'cloudflare'];

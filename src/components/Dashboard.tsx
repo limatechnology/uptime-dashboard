@@ -24,6 +24,8 @@ export function Dashboard() {
 
   const CATEGORY_TABS = [
     { id: 'all', label: t.all },
+    { id: 'Telecomunicaciones', label: t.telecom },
+    { id: 'Desarrollo', label: t.dev },
     { id: 'Redes Sociales', label: t.social },
     { id: 'Mensajería', label: t.messaging },
     { id: 'Juegos', label: t.games },
@@ -343,8 +345,26 @@ export function Dashboard() {
                 className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
               >
                 {filteredServices.sort((a, b) => {
-                  const priority: Record<string, number> = { offline: 0, warning: 1, online: 2, loading: 3 };
-                  return (priority[a.status] ?? 2) - (priority[b.status] ?? 2);
+                  const statusPriority: Record<string, number> = { offline: 0, warning: 1, online: 2, loading: 3 };
+                  const sA = statusPriority[a.status] ?? 2;
+                  const sB = statusPriority[b.status] ?? 2;
+
+                  if (sA !== sB) return sA - sB;
+
+                  // Prioridad manual solicitada
+                  const manualPriority = [
+                    'movistar', 'flow', 'personal', 'claro', 'starlink',
+                    'whatsapp', 'telegram', 'signal', 'twitter', 'instagram', 'facebook'
+                  ];
+                  
+                  const pA = manualPriority.indexOf(a.id);
+                  const pB = manualPriority.indexOf(b.id);
+
+                  if (pA !== -1 && pB !== -1) return pA - pB;
+                  if (pA !== -1) return -1;
+                  if (pB !== -1) return 1;
+
+                  return 0;
                 }).map((s) => (
                   <StatusCard key={s.id} service={s} isLoading={isLoading} lang={lang} />
                 ))}
