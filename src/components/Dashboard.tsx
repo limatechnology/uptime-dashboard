@@ -354,7 +354,7 @@ export function Dashboard() {
                   // Prioridad manual solicitada
                   const manualPriority = [
                     'movistar', 'flow', 'personal', 'claro', 'starlink',
-                    'whatsapp', 'telegram', 'signal', 'twitter', 'instagram', 'facebook'
+                    'whatsapp', 'telegram', 'signal', 'twitter', 'instagram', 'facebook', 'kick'
                   ];
                   
                   const pA = manualPriority.indexOf(a.id);

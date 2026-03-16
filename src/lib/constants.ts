@@ -36,7 +36,7 @@ export const INITIAL_SERVICES: Service[] = [
   // STREAMING
   { id: 'youtube', name: 'YouTube', type: 'proxy', displayUrl: 'youtube.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(20), group: 'Streaming' },
   { id: 'twitch', name: 'Twitch', type: 'public', displayUrl: 'twitch.tv', endpoint: 'https://status.twitch.tv/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(35), group: 'Streaming' },
-  { id: 'kik', name: 'Kik Interactive', type: 'proxy', displayUrl: 'kik.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(40), group: 'Streaming' },
+  { id: 'kick', name: 'Kick', type: 'proxy', displayUrl: 'kick.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(40), group: 'Streaming' },
 
   // JUEGOS
   { id: 'steam', name: 'Steam', type: 'proxy', displayUrl: 'steampowered.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(30), group: 'Juegos' },
