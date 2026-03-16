@@ -14,7 +14,8 @@ import {
   ShieldAlert, 
   Server,
   Activity,
-  CheckCircle2
+  CheckCircle2,
+  Bell
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -42,6 +43,11 @@ export function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [hasNewNotifications, setHasNewNotifications] = useState(false);
+  
+  const notificationsRef = useRef<HTMLDivElement>(null);
   
   const lastFetchTime = useRef(Date.now());
   const [lastSyncAgo, setLastSyncAgo] = useState("");
@@ -107,18 +113,45 @@ export function Dashboard() {
     }
   };
 
+  const fetchNotifications = async () => {
+    try {
+      const response = await fetch('/api/security-news');
+      const data = await response.json();
+      if (data.articles) {
+        setNotifications(data.articles.slice(0, 5));
+        setHasNewNotifications(true);
+      }
+    } catch (err) {
+      console.error("Failed to fetch notifications", err);
+    }
+  };
+
   useEffect(() => {
     setMounted(true);
     fetchStatus(false);
+    fetchNotifications();
     
     const statusInterval = setInterval(() => fetchStatus(false), 60000);
     const syncInterval = setInterval(updateSyncTime, 10000);
+    const notificationsInterval = setInterval(fetchNotifications, 3600000); // 1 hour
     
     return () => {
       clearInterval(statusInterval);
       clearInterval(syncInterval);
+      clearInterval(notificationsInterval);
     };
   }, [lang]);
+
+  // Click outside to close notifications
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (notificationsRef.current && !notificationsRef.current.contains(event.target as Node)) {
+        setShowNotifications(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const filteredServices = services.filter(s => {
     const matchesCat = activeCat === 'all' || s.group === activeCat;
@@ -244,6 +277,89 @@ export function Dashboard() {
                 >
                   <RefreshCw className={`w-4.5 h-4.5 text-text-muted group-hover:text-it-blue ${isRefreshing ? 'animate-spin text-it-blue' : ''}`} />
                 </button>
+
+                <div className="relative" ref={notificationsRef}>
+                  <button 
+                    onClick={() => {
+                      setShowNotifications(!showNotifications);
+                      setHasNewNotifications(false);
+                    }}
+                    className="p-3 rounded-xl border border-card-border bg-card-bg hover:border-cyber-purple/40 transition-all group active:scale-90 shadow-sm relative"
+                  >
+                    <Bell className={`w-4.5 h-4.5 text-text-muted group-hover:text-cyber-purple ${hasNewNotifications ? 'animate-pulse text-cyber-purple' : ''}`} />
+                    {hasNewNotifications && (
+                      <span className="absolute top-2 right-2 w-2 h-2 bg-cyber-purple rounded-full border-2 border-card-bg"></span>
+                    )}
+                  </button>
+
+                  <AnimatePresence>
+                    {showNotifications && (
+                      <motion.div 
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        className="absolute right-0 mt-3 w-80 bg-card-bg border border-card-border rounded-2xl shadow-2xl z-[60] overflow-hidden"
+                      >
+                        <div className="p-4 border-b border-card-border bg-white/5 flex items-center justify-between">
+                          <h3 className="text-[11px] font-black uppercase tracking-widest text-white">
+                            {lang === 'es' ? 'Últimas Alertas' : 'Recent Alerts'}
+                          </h3>
+                          <span className="bg-cyber-purple/20 text-cyber-purple text-[9px] font-bold px-2 py-0.5 rounded-full">
+                            {notifications.length}
+                          </span>
+                        </div>
+                        <div className="max-h-96 overflow-y-auto no-scrollbar">
+                          {notifications.length > 0 ? (
+                            notifications.map((n, i) => (
+                              <a 
+                                key={i}
+                                href={n.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block p-4 border-b border-card-border/50 hover:bg-white/[0.03] transition-colors group"
+                              >
+                                <div className="flex flex-col gap-1.5">
+                                  <div className="flex items-center justify-between gap-2">
+                                    <span className={`text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider ${
+                                      n.category === 'breach' ? 'bg-status-red/20 text-status-red' : 
+                                      n.category === 'vulnerability' ? 'bg-status-orange/20 text-status-orange' : 
+                                      'bg-it-blue/20 text-it-blue'
+                                    }`}>
+                                      {n.category}
+                                    </span>
+                                    <span className="text-[9px] text-text-muted font-medium">
+                                      {new Date(n.publishedAt).toLocaleDateString()}
+                                    </span>
+                                  </div>
+                                  <h4 className="text-[11px] font-bold text-white group-hover:text-cyber-purple transition-colors line-clamp-2">
+                                    {n.title}
+                                  </h4>
+                                  <p className="text-[10px] text-text-muted leading-relaxed line-clamp-2 italic">
+                                    {n.source}
+                                  </p>
+                                </div>
+                              </a>
+                            ))
+                          ) : (
+                            <div className="p-8 text-center">
+                              <p className="text-[11px] text-text-muted font-medium">
+                                {lang === 'es' ? 'No hay alertas recientes' : 'No recent alerts'}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                        <div className="p-3 bg-white/5 text-center">
+                          <button 
+                            onClick={() => setActiveMenu('security')}
+                            className="text-[9px] font-black uppercase tracking-widest text-text-muted hover:text-white transition-colors"
+                          >
+                            {lang === 'es' ? 'Ver todo el centro de seguridad' : 'View full security center'}
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
             </div>
 
