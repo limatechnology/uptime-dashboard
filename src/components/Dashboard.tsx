@@ -15,7 +15,9 @@ import {
   Server,
   Activity,
   CheckCircle2,
-  Bell
+  Bell,
+  Menu,
+  X
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -52,6 +54,7 @@ export function Dashboard() {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [hasNewNotifications, setHasNewNotifications] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   const notificationsRef = useRef<HTMLDivElement>(null);
   
@@ -190,41 +193,57 @@ export function Dashboard() {
     }
   };
 
+  const Logo = ({ className = "" }: { className?: string }) => (
+    <div className={`flex ${className}`}>
+      <svg width="180" height="52" viewBox="0 0 180 52" fill="none" xmlns="http://www.w3.org/2000/svg" className="scale-90 origin-left">
+        <rect width="180" height="52" rx="14" fill="#101010"/>
+        <rect x="10" y="8" width="36" height="36" rx="9" fill="#1a1a1a" stroke="#B8F500" strokeWidth="1.2"/>
+        <circle cx="28" cy="26" r="11" fill="none" stroke="#B8F500" strokeWidth="1.4"/>
+        <line x1="28" y1="15" x2="28" y2="37" stroke="#B8F500" strokeWidth="1"/>
+        <line x1="17" y1="26" x2="39" y2="26" stroke="#B8F500" strokeWidth="1"/>
+        <line x1="20" y1="18" x2="36" y2="34" stroke="#B8F500" strokeWidth="1"/>
+        <line x1="20" y1="34" x2="36" y2="18" stroke="#B8F500" strokeWidth="1"/>
+        <text x="58" y="32" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize="15" fontWeight="700" fill="white" letterSpacing="1.5">LIMA</text>
+        <text x="103" y="32" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize="15" fontWeight="700" fill="#B8F500" letterSpacing="1">UP</text>
+        <circle cx="128" cy="32" r="2.5" fill="#B8F500" opacity="0.9"/>
+        <line x1="57" y1="38" x2="134" y2="38" stroke="#B8F500" strokeWidth="0.4" opacity="0.25"/>
+      </svg>
+    </div>
+  );
+
   if (!mounted) return null;
 
   return (
     <div className="min-h-screen bg-background-main text-text-main font-plus flex font-normal">
-      {/* Toast Notification */}
+      {/* Overlay para mobile menu */}
       <AnimatePresence>
-        {showToast && (
+        {isMobileMenuOpen && (
           <motion.div 
-            initial={{ opacity: 0, y: -20, x: '-50%' }}
-            animate={{ opacity: 1, y: 0, x: '-50%' }}
-            exit={{ opacity: 0, y: -20, x: '-50%' }}
-            className="fixed top-8 left-1/2 -translate-x-1/2 z-[100] bg-[#1a1d27] border border-[#22c55e]/30 px-4 py-2 rounded-full flex items-center gap-2 shadow-2xl"
-          >
-            <CheckCircle2 size={14} className="text-[#22c55e]" />
-            <span className="text-white text-xs font-bold uppercase tracking-widest">{lang === 'es' ? 'Actualizado' : 'Updated'}</span>
-          </motion.div>
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[90] lg:hidden"
+          />
         )}
       </AnimatePresence>
 
       {/* Sidebar Menú */}
-      <aside className="w-68 border-r border-card-border bg-background-main hidden lg:flex flex-col p-7 gap-9 sticky top-0 h-screen overflow-hidden">
-        <div className="flex animate-slide-left mb-2">
-           <svg width="180" height="52" viewBox="0 0 180 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-             <rect width="180" height="52" rx="14" fill="#101010"/>
-             <rect x="10" y="8" width="36" height="36" rx="9" fill="#1a1a1a" stroke="#B8F500" strokeWidth="1.2"/>
-             <circle cx="28" cy="26" r="11" fill="none" stroke="#B8F500" strokeWidth="1.4"/>
-             <line x1="28" y1="15" x2="28" y2="37" stroke="#B8F500" strokeWidth="1"/>
-             <line x1="17" y1="26" x2="39" y2="26" stroke="#B8F500" strokeWidth="1"/>
-             <line x1="20" y1="18" x2="36" y2="34" stroke="#B8F500" strokeWidth="1"/>
-             <line x1="20" y1="34" x2="36" y2="18" stroke="#B8F500" strokeWidth="1"/>
-             <text x="58" y="32" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize="15" fontWeight="700" fill="white" letterSpacing="1.5">LIMA</text>
-             <text x="103" y="32" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize="15" fontWeight="700" fill="#B8F500" letterSpacing="1">UP</text>
-             <circle cx="128" cy="32" r="2.5" fill="#B8F500" opacity="0.9"/>
-             <line x1="57" y1="38" x2="134" y2="38" stroke="#B8F500" strokeWidth="0.4" opacity="0.25"/>
-           </svg>
+      <aside className={`
+        fixed lg:sticky top-0 left-0 z-[100]
+        w-68 h-screen border-r border-card-border bg-background-main 
+        flex flex-col p-7 gap-9 
+        transition-transform duration-300 ease-in-out
+        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}>
+        <div className="flex items-center justify-between lg:block animate-slide-left mb-2">
+           <Logo />
+           <button 
+             onClick={() => setIsMobileMenuOpen(false)}
+             className="lg:hidden p-2 text-text-muted hover:text-white transition-colors"
+           >
+             <X size={20} />
+           </button>
         </div>
 
         <nav className="flex flex-col gap-2.5">
@@ -235,7 +254,10 @@ export function Dashboard() {
             <button
               key={item.id}
               style={{ animationDelay: `${idx * 0.1}s` }}
-              onClick={() => setActiveMenu(item.id as any)}
+              onClick={() => {
+                setActiveMenu(item.id as any);
+                setIsMobileMenuOpen(false);
+              }}
               className={`flex items-center gap-3.5 px-5 py-4 rounded-xl text-[11px] font-bold uppercase tracking-widest transition-all border animate-slide-left ${
                 activeMenu === item.id 
                 ? `bg-white/5 ${item.activeColor} ${item.activeBorder}` 
@@ -261,17 +283,42 @@ export function Dashboard() {
         </div>
       </aside>
 
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {showToast && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, x: '-50%' }}
+            exit={{ opacity: 0, y: -20, x: '-50%' }}
+            className="fixed top-8 left-1/2 -translate-x-1/2 z-[100] bg-[#1a1d27] border border-[#22c55e]/30 px-4 py-2 rounded-full flex items-center gap-2 shadow-2xl"
+          >
+            <CheckCircle2 size={14} className="text-[#22c55e]" />
+            <span className="text-white text-xs font-bold uppercase tracking-widest">{lang === 'es' ? 'Actualizado' : 'Updated'}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col relative min-h-screen overflow-x-hidden">
         <header className="bg-background-main/80 backdrop-blur-md border-b border-card-border sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 md:px-10 pt-8 pb-6 flex flex-col gap-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4 lg:hidden">
-                <h1 className="text-2xl font-black tracking-tight text-text-main">LimaUP<span className="text-lima-green">.</span></h1>
+            <div className="flex items-center justify-between relative">
+              {/* Hamburger Menu - Mobile Only */}
+              <button 
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="lg:hidden p-2 -ml-2 text-text-muted hover:text-white transition-colors"
+              >
+                <Menu size={24} />
+              </button>
+
+              {/* Logo Central - Mobile Only */}
+              <div className="lg:hidden absolute left-1/2 -translate-x-1/2">
+                <Logo className="scale-[0.55] origin-center" />
               </div>
 
               <div className="flex items-center gap-8">
-                <div className="flex items-center gap-2.5 px-3 h-[32px] bg-card-bg/40 border border-card-border rounded-full shadow-lg">
+                {/* EN VIVO - Desktop Only here */}
+                <div className="hidden lg:flex items-center gap-2.5 px-3 h-[32px] bg-card-bg/40 border border-card-border rounded-full shadow-lg">
                   <div className="relative flex items-center justify-center w-2 h-2">
                     <span className="animate-radar absolute inline-flex w-full h-full rounded-full bg-lima-green/40 opacity-0"></span>
                     <span className="relative inline-flex w-1.5 h-1.5 rounded-full bg-lima-green"></span>
@@ -302,21 +349,21 @@ export function Dashboard() {
                           : 'text-status-yellow'
                     }`}>
                       {issuesServices.length === 0 
-                        ? (lang === 'es' ? 'Servicios funcionando correctamente' : 'Services operating normally') 
+                        ? (lang === 'es' ? 'Servicios' : 'Services') + (lang === 'es' ? ' funcionando correctamente' : ' operating normally') 
                         : `${lang === 'es' ? 'Hay problemas en' : 'Issues on'}: ${issuesServices.map(s => s.name.toUpperCase()).join(", ")}`
-                      }
+                    }
                     </span>
                   </div>
                 </div>
               </div>
               
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 sm:gap-4">
                 <button 
                   onClick={handleRefresh}
                   disabled={isRefreshing}
-                  className="p-3 rounded-xl border border-card-border bg-card-bg hover:border-it-blue/40 transition-all group active:scale-90 disabled:opacity-50 shadow-sm"
+                  className="p-2.5 sm:p-3 rounded-xl border border-card-border bg-card-bg hover:border-it-blue/40 transition-all group active:scale-90 disabled:opacity-50 shadow-sm"
                 >
-                  <RefreshCw className={`w-4.5 h-4.5 text-text-muted group-hover:text-it-blue ${isRefreshing ? 'animate-spin text-it-blue' : ''}`} />
+                  <RefreshCw className={`w-4 h-4 sm:w-4.5 sm:h-4.5 text-text-muted group-hover:text-it-blue ${isRefreshing ? 'animate-spin text-it-blue' : ''}`} />
                 </button>
 
                 <div className="relative" ref={notificationsRef}>
@@ -325,9 +372,9 @@ export function Dashboard() {
                       setShowNotifications(!showNotifications);
                       setHasNewNotifications(false);
                     }}
-                    className="p-3 rounded-xl border border-card-border bg-card-bg hover:border-cyber-purple/40 transition-all group active:scale-90 shadow-sm relative"
+                    className="p-2.5 sm:p-3 rounded-xl border border-card-border bg-card-bg hover:border-cyber-purple/40 transition-all group active:scale-90 shadow-sm relative"
                   >
-                    <Bell className={`w-4.5 h-4.5 text-text-muted group-hover:text-cyber-purple ${hasNewNotifications ? 'animate-pulse text-cyber-purple' : ''}`} />
+                    <Bell className={`w-4 h-4 sm:w-4.5 sm:h-4.5 text-text-muted group-hover:text-cyber-purple ${hasNewNotifications ? 'animate-pulse text-cyber-purple' : ''}`} />
                     {hasNewNotifications && (
                       <span className="absolute top-2 right-2 w-2 h-2 bg-cyber-purple rounded-full border-2 border-card-bg"></span>
                     )}
@@ -391,7 +438,10 @@ export function Dashboard() {
                         </div>
                         <div className="p-3 bg-white/5 text-center">
                           <button 
-                            onClick={() => setActiveMenu('security')}
+                            onClick={() => {
+                              setActiveMenu('security');
+                              setShowNotifications(false);
+                            }}
                             className="text-[9px] font-black uppercase tracking-widest text-text-muted hover:text-white transition-colors"
                           >
                             {lang === 'es' ? 'Ver todo el centro de seguridad' : 'View full security center'}
@@ -404,31 +454,58 @@ export function Dashboard() {
               </div>
             </div>
 
+            {/* Live Indicator shorthand function */}
             {activeMenu === 'dashboard' ? (
               <div className="flex flex-col gap-4 animate-in">
-                <div className="flex items-center gap-4">
-                   <div className="bg-[#0078D4]/10 p-3 rounded-2xl border border-[#0078D4]/20 shadow-[0_0_20px_rgba(0,120,212,0.1)]">
-                     <Activity className="w-6 h-6 text-[#0078D4]" />
-                   </div>
-                   <h1 className="text-4xl font-black tracking-tight text-white uppercase">
-                     {t.dashboard}
-                   </h1>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="bg-[#0078D4]/10 p-3 rounded-2xl border border-[#0078D4]/20 shadow-[0_0_20px_rgba(0,120,212,0.1)]">
+                      <Activity className="w-6 h-6 text-[#0078D4]" />
+                    </div>
+                    <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white uppercase">
+                      {t.dashboard}
+                    </h1>
+                  </div>
+
+                  {/* EN VIVO - Mobile Position */}
+                  <div className="lg:hidden flex items-center gap-2 px-3 py-1.5 bg-card-bg/40 border border-card-border rounded-full shadow-lg h-fit mt-1">
+                    <div className="relative flex items-center justify-center w-2 h-2">
+                      <span className="animate-radar absolute inline-flex w-full h-full rounded-full bg-lima-green/40 opacity-0"></span>
+                      <span className="relative inline-flex w-1.5 h-1.5 rounded-full bg-lima-green"></span>
+                    </div>
+                    <span className="text-[9px] font-black text-lima-green uppercase tracking-[0.2em] leading-none">
+                      {t.liveLabel}
+                    </span>
+                  </div>
                 </div>
-                <p className="text-text-muted text-[15px] font-semibold tracking-wide">
+                <p className="text-text-muted text-[13px] sm:text-[15px] font-semibold tracking-wide">
                   {t.servicesSubtitle}
                 </p>
               </div>
             ) : (
               <div className="flex flex-col gap-4 animate-in">
-                <div className="flex items-center gap-4">
-                  <div className="bg-[#6C63FF]/10 p-3 rounded-2xl border border-[#6C63FF]/20 shadow-[0_0_20px_rgba(108,99,255,0.1)]">
-                    <ShieldAlert className="w-6 h-6 text-[#6C63FF]" />
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="bg-[#6C63FF]/10 p-3 rounded-2xl border border-[#6C63FF]/20 shadow-[0_0_20px_rgba(108,99,255,0.1)]">
+                      <ShieldAlert className="w-6 h-6 text-[#6C63FF]" />
+                    </div>
+                    <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white uppercase">
+                      {lang === 'es' ? 'Centro de Seguridad' : 'Security Center'}
+                    </h1>
                   </div>
-                  <h1 className="text-4xl font-black tracking-tight text-white uppercase">
-                    {lang === 'es' ? 'Centro de Seguridad' : 'Security Center'}
-                  </h1>
+
+                  {/* EN VIVO - Mobile Position (also for consistency) */}
+                  <div className="lg:hidden flex items-center gap-2 px-3 py-1.5 bg-card-bg/40 border border-card-border rounded-full shadow-lg h-fit mt-1">
+                    <div className="relative flex items-center justify-center w-2 h-2">
+                      <span className="animate-radar absolute inline-flex w-full h-full rounded-full bg-lima-green/40 opacity-0"></span>
+                      <span className="relative inline-flex w-1.5 h-1.5 rounded-full bg-lima-green"></span>
+                    </div>
+                    <span className="text-[9px] font-black text-lima-green uppercase tracking-[0.2em] leading-none">
+                      {t.liveLabel}
+                    </span>
+                  </div>
                 </div>
-                <p className="text-text-muted text-[15px] font-semibold tracking-wide">
+                <p className="text-text-muted text-[13px] sm:text-[15px] font-semibold tracking-wide">
                   {lang === 'es' ? 'Filtraciones, alertas y consejos para protegerte' : 'Breaches, alerts and tips to protect yourself'}
                 </p>
               </div>
