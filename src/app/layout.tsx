@@ -11,7 +11,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "LimaUP | Dashboard de Uptime",
   description: "Monitoreo en tiempo real de servicios globales",
-  metadataBase: new URL('https://limatechnology.com.ar'),
+  metadataBase: new URL('https://limaup.limatechnology.com.ar'),
   alternates: {
     canonical: '/',
   },

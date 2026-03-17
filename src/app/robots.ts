@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/api/',
     },
-    sitemap: 'https://limatechnology.com.ar/sitemap.xml',
+    sitemap: 'https://limaup.limatechnology.com.ar/sitemap.xml',
   }
 }
