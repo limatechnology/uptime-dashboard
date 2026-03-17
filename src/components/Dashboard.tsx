@@ -472,7 +472,7 @@ export function Dashboard() {
 
               {/* Grid de Servicios */}
               <section 
-                className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
+                className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 items-start"
               >
                 {filteredServices.sort((a, b) => {
                   const statusPriority: Record<string, number> = { offline: 0, warning: 1, online: 2, loading: 3 };
