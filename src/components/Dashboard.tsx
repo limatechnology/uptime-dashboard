@@ -283,8 +283,16 @@ export function Dashboard() {
                 </div>
 
                 <div className="hidden sm:flex items-center gap-5">
-                  <span className="text-[11px] font-bold text-text-muted uppercase tracking-[0.12em] flex items-center gap-2.5">
-                     {offlineCount === 0 && warningCount === 0 && <CheckCircle2 className="w-4 h-4 text-status-green" />}
+                  <span className={`text-[11px] font-bold uppercase tracking-[0.12em] flex items-center gap-2.5 ${offlineCount > 0 ? 'text-status-red' : warningCount > 0 ? 'text-status-yellow' : 'text-text-muted'}`}>
+                     {offlineCount > 0 ? (
+                       <div className="w-4 h-4 rounded-full bg-status-red/20 flex items-center justify-center">
+                         <span className="text-[10px] font-black text-status-red leading-none mt-[-1px]">×</span>
+                       </div>
+                     ) : warningCount > 0 ? (
+                       <AlertTriangle className="w-4 h-4 text-status-yellow" />
+                     ) : (
+                       <CheckCircle2 className="w-4 h-4 text-status-green" />
+                     )}
                      {getSummaryHeader()}
                   </span>
                 </div>

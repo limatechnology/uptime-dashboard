@@ -91,21 +91,21 @@ export function StatusCard({ service, isLoading: isGlobalLoading, lang }: Props)
             <AlertTriangle className="w-4 h-4 text-status-yellow shrink-0 mt-0.5" />
             <div className="flex flex-col gap-1">
               <p className="text-[12px] font-bold text-status-yellow leading-tight">
-                {service.incident.title}
+                {service.incident[lang]?.title || service.incident.title}
               </p>
-              {service.incident.description && (
-                <p className="text-[11px] text-zinc-400 leading-normal">
-                  {service.incident.description}
+              {(service.incident[lang]?.description || service.incident.description) && (
+                <p className="text-[11px] text-zinc-400 leading-normal whitespace-pre-line">
+                  {service.incident[lang]?.description || service.incident.description}
                 </p>
               )}
-              {service.incident.status && (
+              {(service.incident[lang]?.status || service.incident.status) && (
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
-                    {service.incident.status}
+                    {service.incident[lang]?.status || service.incident.status}
                   </span>
-                  {service.incident.updatedAt && (
+                  {(service.incident[lang]?.updatedAt || service.incident.updatedAt) && (
                     <span className="text-[10px] text-zinc-600">
-                      • {service.incident.updatedAt}
+                      • {service.incident[lang]?.updatedAt || service.incident.updatedAt}
                     </span>
                   )}
                 </div>

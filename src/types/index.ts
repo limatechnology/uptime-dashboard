@@ -1,10 +1,22 @@
 export type ServiceStatus = 'online' | 'warning' | 'offline' | 'loading';
 
 export interface Incident {
-  title: string;
+  title?: string;
   description?: string;
   status?: string;
   updatedAt?: string;
+  en?: {
+    title: string;
+    description?: string;
+    status?: string;
+    updatedAt?: string;
+  };
+  es?: {
+    title: string;
+    description?: string;
+    status?: string;
+    updatedAt?: string;
+  };
 }
 
 export interface Service {
