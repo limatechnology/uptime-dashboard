@@ -258,7 +258,7 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
                             .replace('health.aws.amazon.com', 'aws.amazon.com')
                             .replace('vercel-status.com', 'vercel.com')
                             .replace('cloudflarestatus.com', 'cloudflare.com')
-                            .replace('personalflow.com.ar', 'play.flow.com.ar')
+                            .replace('personalflow.com.ar', 'www.flow.com.ar')
                             .replace('movistar.com.ar', 'www.movistar.es')
                             .replace('claro.com.ar', 'www.claro.com.ar')
                             .replace('personal.com.ar', 'www.personal.com.ar')
