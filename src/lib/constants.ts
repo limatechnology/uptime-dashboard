@@ -13,6 +13,7 @@ export const INITIAL_SERVICES: Service[] = [
   { id: 'telegram', name: 'Telegram Messenger', type: 'proxy', displayUrl: 'telegram.org', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(25), group: 'Mensajería' },
   { id: 'signal', name: 'Signal Messenger', type: 'proxy', displayUrl: 'signal.org', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(20), group: 'Mensajería' },
   { id: 'discord', name: 'Discord', type: 'public', displayUrl: 'discord.com', endpoint: 'https://discordstatus.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(30), group: 'Mensajería' },
+  { id: 'gmail', name: 'Gmail', type: 'proxy', displayUrl: 'mail.google.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(20), group: 'Mensajería' },
 
   // REDES SOCIALES
   { id: 'twitter', name: 'X / Twitter', type: 'proxy', displayUrl: 'x.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(40), group: 'Redes Sociales' },
@@ -67,6 +68,7 @@ export const SECURITY_ALERTS: Record<string, string> = {
 export const TRANSLATIONS = {
   es: {
     dashboard: "Servicios",
+    popular: "Populares",
     security: "Seguridad",
     servicesSubtitle: "Estado en tiempo real de los servicios que usás",
     hero: "¿Se cayó o soy yo?",
@@ -101,6 +103,7 @@ export const TRANSLATIONS = {
   },
   en: {
     dashboard: "Services",
+    popular: "Popular",
     security: "Security",
     servicesSubtitle: "Real-time status of the services you use",
     hero: "Is it down or is it me?",

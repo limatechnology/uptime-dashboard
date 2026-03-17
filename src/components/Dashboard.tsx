@@ -24,6 +24,7 @@ export function Dashboard() {
   const t = TRANSLATIONS[lang];
 
   const CATEGORY_TABS = [
+    { id: 'popular', label: t.popular },
     { id: 'all', label: t.all },
     { id: 'Telecomunicaciones', label: t.telecom },
     { id: 'Desarrollo', label: t.dev },
@@ -37,7 +38,12 @@ export function Dashboard() {
 
   const [services, setServices] = useState<Service[]>(INITIAL_SERVICES);
   const [mounted, setMounted] = useState(false);
-  const [activeCat, setActiveCat] = useState('all');
+  const POPULAR_SERVICES = [
+    'whatsapp', 'instagram', 'youtube', 'gmail', 'discord', 'twitter', 'twitch', 
+    'openai', 'telegram', 'steam', 'movistar', 'personal', 'claro', 'flow'
+  ];
+
+  const [activeCat, setActiveCat] = useState('popular');
   const [activeMenu, setActiveMenu] = useState<'dashboard' | 'security'>('dashboard');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -154,7 +160,8 @@ export function Dashboard() {
   }, []);
 
   const filteredServices = services.filter(s => {
-    const matchesCat = activeCat === 'all' || s.group === activeCat;
+    const matchesCat = activeCat === 'all' || 
+                       (activeCat === 'popular' ? POPULAR_SERVICES.includes(s.id) : s.group === activeCat);
     const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           s.displayUrl.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCat && matchesSearch;
@@ -482,13 +489,8 @@ export function Dashboard() {
                   if (sA !== sB) return sA - sB;
 
                   // Prioridad manual solicitada
-                  const manualPriority = [
-                    'movistar', 'flow', 'personal', 'claro', 'starlink',
-                    'whatsapp', 'telegram', 'signal', 'twitter', 'instagram', 'facebook', 'kick'
-                  ];
-                  
-                  const pA = manualPriority.indexOf(a.id);
-                  const pB = manualPriority.indexOf(b.id);
+                  const pA = POPULAR_SERVICES.indexOf(a.id);
+                  const pB = POPULAR_SERVICES.indexOf(b.id);
 
                   if (pA !== -1 && pB !== -1) return pA - pB;
                   if (pA !== -1) return -1;

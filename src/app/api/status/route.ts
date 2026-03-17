@@ -140,6 +140,7 @@ export async function GET() {
   const statusMap: Record<string, string> = Object.fromEntries(atlassianResults);
   statusMap['google'] = googleStatus;
   statusMap['youtube'] = googleStatus;
+  statusMap['gmail'] = googleStatus;
   statusMap['steam'] = steamStatus;
   statusMap['facebook'] = metaStatus;
   statusMap['instagram'] = metaStatus;
