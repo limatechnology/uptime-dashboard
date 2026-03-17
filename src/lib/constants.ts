@@ -41,9 +41,9 @@ export const INITIAL_SERVICES: Service[] = [
     latencyHistory: Array(10).fill(45), 
     group: 'IA',
     incident: {
-      title: "Elevated Errors Affecting ChatGPT Free and Guest Plan Users",
-      description: "We have applied the mitigation and are monitoring the recovery.",
-      status: "Monitoring · Degraded performance"
+      title: "Errores elevados afectando a usuarios de planes Gratuitos e Invitados de ChatGPT",
+      description: "Hemos aplicado una mitigación y estamos monitoreando la recuperación.",
+      status: "Monitoreando · Rendimiento degradado"
     }
   },
   { id: 'anthropic', name: 'Anthropic / Claude', type: 'public', displayUrl: 'anthropic.com', endpoint: 'https://status.anthropic.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(60), group: 'IA' },
