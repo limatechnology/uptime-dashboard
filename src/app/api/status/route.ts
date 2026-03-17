@@ -23,24 +23,29 @@ async function getAtlassianStatus(url: string, serviceKey?: string) {
     const data = await res.json();
     const indicator = data.status?.indicator || 'none';
     let status = 'online';
-    
-    if (indicator !== 'none') {
-      if (serviceKey === 'vercel') {
-        if (indicator === 'major' || indicator === 'critical') status = 'warning';
-      } else {
-        if (indicator === 'minor' || indicator === 'maint' || indicator === 'major') status = 'warning';
-        if (indicator === 'critical') status = 'offline';
+    let incident = null;
+    let hasActiveIncident = false;
+
+    if (data.incidents && data.incidents.length > 0) {
+      const activeIncident = data.incidents[0];
+      // Check if the latest incident is actually active
+      if (activeIncident.status !== 'resolved' && activeIncident.status !== 'postmortem') {
+        hasActiveIncident = true;
+        incident = {
+          title: activeIncident.name,
+          description: activeIncident.incident_updates?.[0]?.body || '',
+          status: activeIncident.status
+        };
       }
     }
 
-    let incident = null;
-    if (status !== 'online' && data.incidents && data.incidents.length > 0) {
-      const activeIncident = data.incidents[0];
-      incident = {
-        title: activeIncident.name,
-        description: activeIncident.incident_updates?.[0]?.body || '',
-        status: activeIncident.status
-      };
+    if (indicator !== 'none' || hasActiveIncident) {
+      if (serviceKey === 'vercel' && indicator !== 'none') {
+        if (indicator === 'major' || indicator === 'critical') status = 'warning';
+      } else {
+        status = 'warning';
+        if (indicator === 'critical') status = 'offline';
+      }
     }
     
     return { status, incident };
