@@ -271,7 +271,7 @@ export function Dashboard() {
               </div>
 
               <div className="flex items-center gap-8">
-                <div className="flex items-center gap-2.5 px-3 py-1.5 bg-card-bg/40 border border-card-border rounded-full shadow-lg">
+                <div className="flex items-center gap-2.5 px-3 h-[32px] bg-card-bg/40 border border-card-border rounded-full shadow-lg">
                   <div className="relative flex items-center justify-center w-2 h-2">
                     <span className="animate-radar absolute inline-flex w-full h-full rounded-full bg-lima-green/40 opacity-0"></span>
                     <span className="relative inline-flex w-1.5 h-1.5 rounded-full bg-lima-green"></span>
@@ -282,7 +282,7 @@ export function Dashboard() {
                 </div>
 
                 <div className="hidden sm:flex items-center">
-                  <div className={`flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl border transition-colors ${
+                  <div className={`flex items-center gap-2.5 px-3.5 h-[32px] rounded-xl border transition-colors ${
                     issuesServices.length === 0 
                       ? 'bg-status-green/5 border-status-green/10' 
                       : offlineCount > 0 

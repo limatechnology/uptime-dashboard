@@ -13,7 +13,8 @@ import {
   MessageCircle, 
   ChevronDown,
   AlertTriangle,
-  ExternalLink
+  ExternalLink,
+  Search
 } from "lucide-react";
 import { INITIAL_SERVICES } from "@/lib/constants";
 
@@ -152,6 +153,7 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [news, setNews] = useState<any[]>([]);
   const [loadingNews, setLoadingNews] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const refreshNews = () => {
@@ -215,8 +217,37 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
     return aLevel - bLevel;
   });
 
+  const filteredLeaks = sortedLeaks.filter(s => 
+    s.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    s.displayUrl.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (KNOWN_BREACHES[s.id]?.title || "").toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const filteredNews = news.filter(n => 
+    n.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    (n.description || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+    n.source.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const filteredTips = SECURITY_TIPS.filter(t => 
+    t.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    t.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="flex flex-col gap-10 animate-fade-in pb-12">
+      {/* Buscador */}
+      <div className="relative group flex items-center w-full max-w-2xl animate-in">
+        <Search className="absolute left-5 w-4.5 h-4.5 text-text-muted group-focus-within:text-[#6C63FF] transition-colors duration-300" />
+        <input 
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder={lang === 'es' ? 'Buscar servicio, filtración o noticia...' : 'Search service, breach or news...'}
+          className="bg-card-bg/50 border border-card-border rounded-2xl py-4 pl-14 pr-8 text-[15px] font-semibold w-full outline-none focus:bg-card-bg focus:border-[#6C63FF]/50 soft-shadow transition-all duration-300 text-text-main placeholder:text-text-muted/40"
+        />
+      </div>
+
       {/* Tabs Internas */}
       <div className="flex items-center gap-2 p-1 bg-background-main border border-card-border rounded-2xl w-fit">
         {[
@@ -243,7 +274,7 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
       <div className="min-h-[400px]">
         {activeTab === 'leaks' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in">
-            {sortedLeaks.map(service => {
+            {filteredLeaks.map(service => {
               const rawBreach = KNOWN_BREACHES[service.id];
               const breach = rawBreach && isBreachRecent(rawBreach.date) ? rawBreach : null;
               const severityInfo = breach ? getSeverityLabel(breach.severity) : null;
@@ -343,9 +374,9 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
               </div>
             )}
             
-            {!loadingNews && news.length > 0 && (
+            {!loadingNews && filteredNews.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {news.map((article, idx) => {
+                {filteredNews.map((article, idx) => {
                   let catStyle = '';
                   let catLabel = '';
                   switch(article.category) {
@@ -405,10 +436,10 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
               </div>
             )}
             
-            {!loadingNews && news.length === 0 && (
+            {!loadingNews && filteredNews.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-20 bg-card-bg border border-card-border rounded-3xl">
                   <span className="text-zinc-500 font-medium">
-                    {lang === 'es' ? 'No hay noticias recientes.' : 'No recent news.'}
+                    {news.length === 0 ? (lang === 'es' ? 'No hay noticias recientes.' : 'No recent news.') : (lang === 'es' ? 'No se encontraron resultados.' : 'No results found.')}
                   </span>
                 </div>
             )}
@@ -417,7 +448,7 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
 
         {activeTab === 'tips' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in">
-            {SECURITY_TIPS.map((tip, idx) => (
+            {filteredTips.map((tip, idx) => (
               <div key={idx} className="bg-card-bg border border-card-border p-8 rounded-[32px] flex flex-col items-center text-center gap-6 hover:border-[#6C63FF]/40 transition-all duration-300 shadow-sm group">
                 <div className="w-16 h-16 bg-[#6C63FF]/10 rounded-2xl flex items-center justify-center border border-[#6C63FF]/20 group-hover:scale-110 transition-transform">
                   <tip.icon className="w-8 h-8 text-[#6C63FF]" />
