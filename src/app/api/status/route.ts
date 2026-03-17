@@ -34,7 +34,8 @@ async function getAtlassianStatus(url: string, serviceKey?: string) {
         incident = {
           title: activeIncident.name,
           description: activeIncident.incident_updates?.[0]?.body || '',
-          status: activeIncident.status
+          status: activeIncident.status,
+          updatedAt: activeIncident.updated_at || activeIncident.created_at
         };
       }
     }
@@ -82,7 +83,8 @@ async function getGoogleCloudStatus() {
       incident: {
         title: active[0].external_desc || 'Google Cloud Incident',
         description: '',
-        status: 'Investigating'
+        status: 'Investigating',
+        updatedAt: active[0].modified || active[0].created
       }
     };
   } catch (e) {

@@ -4,6 +4,30 @@ import { Service } from "@/types";
 import { TRANSLATIONS, SECURITY_ALERTS } from "@/lib/constants";
 import { AlertTriangle, Clock } from "lucide-react";
 
+const getRelativeTime = (timeStr?: string, lang: 'es' | 'en' = 'es') => {
+  if (!timeStr) return null;
+  if (timeStr.toLowerCase().includes('hace') || timeStr.toLowerCase().includes('ago') || timeStr.toLowerCase().includes('just')) return timeStr;
+  
+  const date = new Date(timeStr);
+  if (isNaN(date.getTime())) return timeStr;
+
+  const diffMins = Math.floor((new Date().getTime() - date.getTime()) / 60000);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (lang === 'en') {
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins} min ago`;
+    if (diffHours < 24) return `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`;
+    return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
+  } else {
+    if (diffMins < 1) return 'Hace un instante';
+    if (diffMins < 60) return `Hace ${diffMins} minutos`;
+    if (diffHours < 24) return `Hace ${diffHours} hora${diffHours === 1 ? '' : 's'}`;
+    return `Hace ${diffDays} día${diffDays === 1 ? '' : 's'}`;
+  }
+};
+
 interface Props {
   service: Service;
   isLoading?: boolean;
@@ -136,8 +160,8 @@ export function StatusCard({ service, isLoading: isGlobalLoading, lang }: Props)
                     {activeIncident.status}
                   </span>
                   {activeIncident.updatedAt && (
-                    <span className="text-[10px] text-zinc-600">
-                      • {activeIncident.updatedAt}
+                    <span className="text-[11px] font-medium text-zinc-500">
+                      • {getRelativeTime(activeIncident.updatedAt, lang)}
                     </span>
                   )}
                 </div>
