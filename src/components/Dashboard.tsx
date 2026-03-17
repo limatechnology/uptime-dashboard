@@ -87,7 +87,7 @@ export function Dashboard() {
               status: apiStatus as any,
               latency,
               latencyHistory: updateServiceLatency(s, latency),
-              history: [...s.history.slice(1), historyValue],
+              history: [...s.history.slice(0, -1), historyValue],
               incident: apiStatus === 'online' ? undefined : (apiIncident || undefined)
             };
           }
@@ -149,7 +149,7 @@ export function Dashboard() {
       clearInterval(syncInterval);
       clearInterval(notificationsInterval);
     };
-  }, [lang]);
+  }, []);
 
   // Click outside to close notifications
   useEffect(() => {
