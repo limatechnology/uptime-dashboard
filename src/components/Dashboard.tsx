@@ -174,11 +174,7 @@ export function Dashboard() {
   const warningCount = services.filter(s => s.status === 'warning').length;
   const issuesServices = services.filter(s => s.status === 'offline' || s.status === 'warning');
 
-  const getSummaryHeader = () => {
-    if (offlineCount > 0) return `${offlineCount} ${t.criticalIssues}`;
-    if (warningCount > 0) return `${warningCount} ${t.someIssues}`;
-    return t.allGood;
-  };
+
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -285,19 +281,32 @@ export function Dashboard() {
                   </span>
                 </div>
 
-                <div className="hidden sm:flex items-center gap-5">
-                  <span className={`text-[11px] font-bold uppercase tracking-[0.12em] flex items-center gap-2.5 ${offlineCount > 0 ? 'text-status-red' : warningCount > 0 ? 'text-status-yellow' : 'text-text-muted'}`}>
-                     {offlineCount > 0 ? (
-                       <div className="w-4 h-4 rounded-full bg-status-red/20 flex items-center justify-center">
-                         <span className="text-[10px] font-black text-status-red leading-none mt-[-1px]">×</span>
-                       </div>
-                     ) : warningCount > 0 ? (
-                       <AlertTriangle className="w-4 h-4 text-status-yellow" />
-                     ) : (
-                       <CheckCircle2 className="w-4 h-4 text-status-green" />
-                     )}
-                     {getSummaryHeader()}
-                  </span>
+                <div className="hidden sm:flex items-center">
+                  <div className={`flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl border transition-colors ${
+                    issuesServices.length === 0 
+                      ? 'bg-status-green/5 border-status-green/10' 
+                      : offlineCount > 0 
+                        ? 'bg-status-red/5 border-status-red/15' 
+                        : 'bg-status-yellow/5 border-status-yellow/15'
+                  }`}>
+                    {issuesServices.length === 0 ? (
+                      <CheckCircle2 className="w-4 h-4 text-status-green" />
+                    ) : (
+                      <AlertTriangle className={`w-4 h-4 ${offlineCount > 0 ? 'text-status-red' : 'text-status-yellow'}`} />
+                    )}
+                    <span className={`text-[10px] font-bold uppercase tracking-wider truncate max-w-[500px] mt-[1px] ${
+                      issuesServices.length === 0 
+                        ? 'text-text-muted text-[11px]' 
+                        : offlineCount > 0 
+                          ? 'text-status-red' 
+                          : 'text-status-yellow'
+                    }`}>
+                      {issuesServices.length === 0 
+                        ? (lang === 'es' ? 'Servicios funcionando correctamente' : 'Services operating normally') 
+                        : `${lang === 'es' ? 'Hay problemas en' : 'Issues on'}: ${issuesServices.map(s => s.name.toUpperCase()).join(", ")}`
+                      }
+                    </span>
+                  </div>
                 </div>
               </div>
               
@@ -453,21 +462,7 @@ export function Dashboard() {
                 />
               </div>
 
-              {/* Banner de Problemas Activos - Slim */}
-              {issuesServices.length > 0 && (
-                <section 
-                  className={`${
-                    offlineCount > 0 ? 'bg-status-red/5 border-status-red/15' : 'bg-status-yellow/5 border-status-yellow/15'
-                  } border rounded-xl px-4 h-10 flex items-center shadow-lg animate-in`}
-                >
-                  <div className="flex items-center gap-2">
-                    <AlertTriangle size={14} className={offlineCount > 0 ? 'text-status-red' : 'text-status-yellow'} />
-                    <span className={`text-[11px] font-bold tracking-tight uppercase ${offlineCount > 0 ? 'text-status-red' : 'text-status-yellow'}`}>
-                      {t.alertMsg} {issuesServices.map(s => s.name).join(", ")}
-                    </span>
-                  </div>
-                </section>
-              )}
+
 
               {/* Tabs de Categorías - Compact */}
               <nav 
