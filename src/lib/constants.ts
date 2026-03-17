@@ -97,7 +97,7 @@ export const TRANSLATIONS = {
     infra: "Infraestructura",
     telecom: "Telecomunicaciones",
     dev: "Desarrollo",
-    createdBy: "Creado por",
+    createdBy: "Hecho con",
   },
   en: {
     dashboard: "Services",
@@ -131,6 +131,6 @@ export const TRANSLATIONS = {
     infra: "Infrastructure",
     telecom: "Telecommunications",
     dev: "Development",
-    createdBy: "Created by",
+    createdBy: "Made with",
   }
 };

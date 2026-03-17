@@ -131,7 +131,7 @@ export function Dashboard() {
     fetchStatus(false);
     fetchNotifications();
     
-    const statusInterval = setInterval(() => fetchStatus(false), 60000);
+    const statusInterval = setInterval(() => fetchStatus(false), 300000); // 5 minutes
     const syncInterval = setInterval(updateSyncTime, 10000);
     const notificationsInterval = setInterval(fetchNotifications, 3600000); // 1 hour
     
@@ -413,7 +413,7 @@ export function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 md:px-10 bg-background-main">
           <div className="flex items-center px-0 py-2 border-b border-white/5 mb-6">
             <div className="flex-1" />
-            <span className="text-[11px] text-zinc-600 font-mono">
+            <span className="text-[12px] text-zinc-400 font-medium font-mono tracking-wide">
               {lastSyncAgo}
             </span>
           </div>
@@ -509,9 +509,11 @@ export function Dashboard() {
             <p className="text-[11px] font-bold text-text-muted uppercase tracking-[0.2em] text-center px-4 leading-relaxed">
               {t.footer}
             </p>
-            <div className="flex items-center gap-3 text-[11px] font-bold text-text-muted uppercase tracking-widest">
+            <div className="flex items-center gap-2 text-[12px] font-medium text-text-muted transition-colors">
               <span>{t.createdBy}</span>
-              <a href="https://limatechnology.com.ar" className="text-lima-green hover:text-white transition-all bg-lima-green/5 px-3 py-1 rounded-lg border border-lima-green/20 hover:border-lima-green/50">Lima Technology</a>
+              <span className="text-red-500">❤️</span>
+              <span className="lowercase">por</span>
+              <a href="https://limatechnology.com.ar" className="text-lima-green hover:text-white transition-all bg-lima-green/5 px-3 py-1 rounded-lg border border-lima-green/20 hover:border-lima-green/50 font-bold ml-1">Lima Technology</a>
             </div>
           </footer>
         </main>

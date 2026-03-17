@@ -115,7 +115,28 @@ export function StatusCard({ service, isLoading: isGlobalLoading, lang }: Props)
         </div>
       )}
 
-      <div className="mt-auto pt-2 border-t border-white/5 relative z-10">
+      {/* 7 Days History */}
+      <div className="flex flex-col gap-1.5 mt-2 relative z-10">
+        <div className="flex justify-between items-center px-1">
+          <span className="text-[8px] text-zinc-600 font-bold uppercase tracking-widest">{lang === 'es' ? 'Hace 7 Días' : '7 Days Ago'}</span>
+          <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-widest">{lang === 'es' ? 'Hoy' : 'Today'}</span>
+        </div>
+        <div className="flex items-center gap-1.5 w-full h-1.5 px-0.5">
+          {service.history.slice(-7).map((val, i) => {
+            const historyColor = val === 1 ? 'bg-status-green' : val === 0.5 ? 'bg-status-yellow' : 'bg-status-red';
+            const opacity = val === 1 ? 'opacity-30' : 'opacity-90'; 
+            return (
+              <div 
+                key={i} 
+                className={`flex-1 h-full rounded-full ${historyColor} ${opacity}`} 
+                title={val === 1 ? t.online : val === 0.5 ? t.degraded : t.down}
+              />
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="mt-auto pt-3 border-t border-white/5 relative z-10">
         {securityAlert ? (
           <div className="flex items-center gap-1.5 text-[#f59e0b] font-semibold text-[11px]">
              <span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b] shrink-0" />
