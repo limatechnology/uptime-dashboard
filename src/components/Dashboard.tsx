@@ -76,8 +76,10 @@ export function Dashboard() {
       
       if (data.success && data.services) {
         setServices(prev => prev.map(s => {
-          const apiStatus = data.services[s.id];
-          if (apiStatus) {
+          const apiData = data.services[s.id];
+          if (apiData) {
+            const apiStatus = typeof apiData === 'string' ? apiData : apiData.status;
+            const apiIncident = typeof apiData === 'object' ? apiData.incident : undefined;
             const historyValue = apiStatus === 'online' ? 1 : apiStatus === 'warning' ? 0.5 : 0;
             const latency = apiStatus === 'online' ? Math.floor(Math.random() * 80) + 20 : 0;
             return {
@@ -85,7 +87,8 @@ export function Dashboard() {
               status: apiStatus as any,
               latency,
               latencyHistory: updateServiceLatency(s, latency),
-              history: [...s.history.slice(1), historyValue]
+              history: [...s.history.slice(1), historyValue],
+              incident: apiStatus === 'online' ? undefined : (apiIncident || undefined)
             };
           }
           return s;

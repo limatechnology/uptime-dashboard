@@ -16,7 +16,7 @@ export function StatusCard({ service, isLoading: isGlobalLoading, lang }: Props)
   const isOffline = service.status === 'offline';
   const isLoading = service.status === 'loading' || isGlobalLoading;
   
-  const t = TRANSLATIONS[lang];
+  const t: any = TRANSLATIONS[lang];
   const securityAlert = SECURITY_ALERTS[service.id];
 
   const getStatusLabel = () => {
@@ -38,6 +38,38 @@ export function StatusCard({ service, isLoading: isGlobalLoading, lang }: Props)
   const leftBorder = !isOnline 
     ? (isOffline ? "border-l-status-red" : "border-l-status-yellow") + " border-l-[3.5px]" 
     : "";
+
+  const displayIncident = !isOnline;
+  
+  const getIncidentData = () => {
+    if (service.incident) {
+      const incStatus = service.incident.status || t.defaultIncidentStatus;
+      let displayStatus = incStatus;
+      
+      if (lang === 'es') {
+        const s = String(incStatus).toLowerCase();
+        if (s.includes('monitor')) displayStatus = 'Monitoreando';
+        else if (s.includes('investigat')) displayStatus = 'Investigando';
+        else if (s.includes('identif')) displayStatus = 'Identificado';
+        else if (s.includes('resolv')) displayStatus = 'Resuelto';
+      }
+
+      return {
+        title: service.incident.title || t.defaultIncidentTitle,
+        description: service.incident.description,
+        status: displayStatus,
+        updatedAt: service.incident.updatedAt
+      };
+    }
+    
+    return {
+      title: t.defaultIncidentTitle,
+      description: t.defaultIncidentDesc,
+      status: t.defaultIncidentStatus
+    };
+  };
+
+  const activeIncident = displayIncident ? getIncidentData() : null;
 
   return (
     <div
@@ -85,27 +117,27 @@ export function StatusCard({ service, isLoading: isGlobalLoading, lang }: Props)
         </div>
       </div>
 
-      {service.incident && (
+      {activeIncident && (
         <div className="mx-0 mt-1 p-3 bg-status-yellow/10 border border-status-yellow/20 rounded-xl relative z-10 transition-all group-hover:bg-status-yellow/15">
           <div className="flex items-start gap-2">
             <AlertTriangle className="w-4 h-4 text-status-yellow shrink-0 mt-0.5" />
             <div className="flex flex-col gap-1">
               <p className="text-[12px] font-bold text-status-yellow leading-tight">
-                {service.incident[lang]?.title || service.incident.title}
+                {activeIncident.title}
               </p>
-              {(service.incident[lang]?.description || service.incident.description) && (
+              {activeIncident.description && (
                 <p className="text-[11px] text-zinc-400 leading-normal whitespace-pre-line">
-                  {service.incident[lang]?.description || service.incident.description}
+                  {activeIncident.description}
                 </p>
               )}
-              {(service.incident[lang]?.status || service.incident.status) && (
+              {activeIncident.status && (
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
-                    {service.incident[lang]?.status || service.incident.status}
+                    {activeIncident.status}
                   </span>
-                  {(service.incident[lang]?.updatedAt || service.incident.updatedAt) && (
+                  {activeIncident.updatedAt && (
                     <span className="text-[10px] text-zinc-600">
-                      • {service.incident[lang]?.updatedAt || service.incident.updatedAt}
+                      • {activeIncident.updatedAt}
                     </span>
                   )}
                 </div>

@@ -5,18 +5,6 @@ export interface Incident {
   description?: string;
   status?: string;
   updatedAt?: string;
-  en?: {
-    title: string;
-    description?: string;
-    status?: string;
-    updatedAt?: string;
-  };
-  es?: {
-    title: string;
-    description?: string;
-    status?: string;
-    updatedAt?: string;
-  };
 }
 
 export interface Service {

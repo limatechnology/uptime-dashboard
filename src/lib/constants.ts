@@ -40,19 +40,7 @@ export const INITIAL_SERVICES: Service[] = [
     status: 'warning', 
     history: Array(24).fill(1), 
     latencyHistory: Array(10).fill(45), 
-    group: 'IA',
-    incident: {
-      en: {
-        title: "We're currently experiencing issues",
-        description: "Elevated errors for sign-in and account creation\nWe have applied the mitigation and are monitoring the recovery.",
-        status: "Monitoring"
-      },
-      es: {
-        title: "Actualmente estamos experimentando problemas",
-        description: "Errores elevados en el inicio de sesión y creación de cuentas\nHemos aplicado una mitigación y estamos monitoreando la recuperación.",
-        status: "Monitoreando"
-      }
-    }
+    group: 'IA'
   },
   { id: 'anthropic', name: 'Anthropic / Claude', type: 'public', displayUrl: 'anthropic.com', endpoint: 'https://status.anthropic.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(60), group: 'IA' },
 
@@ -107,6 +95,9 @@ export const TRANSLATIONS = {
     telecom: "Telecomunicaciones",
     dev: "Desarrollo",
     createdBy: "Hecho con",
+    defaultIncidentTitle: "Actualmente estamos experimentando problemas",
+    defaultIncidentDesc: "Se presentan problemas con este servicio.",
+    defaultIncidentStatus: "MONITOREANDO",
   },
   en: {
     dashboard: "Services",
@@ -142,5 +133,8 @@ export const TRANSLATIONS = {
     telecom: "Telecommunications",
     dev: "Development",
     createdBy: "Made with",
+    defaultIncidentTitle: "We're currently experiencing issues",
+    defaultIncidentDesc: "Issues are present with this service.",
+    defaultIncidentStatus: "MONITORING",
   }
 };

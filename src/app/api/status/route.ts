@@ -18,24 +18,46 @@ const PUBLIC_STATUS_PAGES = {
 
 async function getAtlassianStatus(url: string, serviceKey?: string) {
   try {
-    const res = await fetch(url, { next: { revalidate: 60 } });
+    const summaryUrl = url.replace('status.json', 'summary.json');
+    const res = await fetch(summaryUrl, { next: { revalidate: 60 } });
     const data = await res.json();
     const indicator = data.status?.indicator || 'none';
+    let status = 'online';
     
-    if (indicator === 'none') return 'online';
-
-    // Manejo específico para Vercel: ignorar minor/maint, solo warning si es major o critical
-    if (serviceKey === 'vercel') {
-      if (indicator === 'major' || indicator === 'critical') return 'warning';
-      return 'online';
+    if (indicator !== 'none') {
+      if (serviceKey === 'vercel') {
+        if (indicator === 'major' || indicator === 'critical') status = 'warning';
+      } else {
+        if (indicator === 'minor' || indicator === 'maint' || indicator === 'major') status = 'warning';
+        if (indicator === 'critical') status = 'offline';
+      }
     }
 
-    if (indicator === 'minor' || indicator === 'maint' || indicator === 'major') return 'warning';
-    if (indicator === 'critical') return 'offline';
+    let incident = null;
+    if (status !== 'online' && data.incidents && data.incidents.length > 0) {
+      const activeIncident = data.incidents[0];
+      incident = {
+        title: activeIncident.name,
+        description: activeIncident.incident_updates?.[0]?.body || '',
+        status: activeIncident.status
+      };
+    }
     
-    return 'online'; 
+    return { status, incident };
   } catch (e) {
-    return 'online'; 
+    try {
+      const fallbackRes = await fetch(url, { next: { revalidate: 60 } });
+      const fallbackData = await fallbackRes.json();
+      const indicator = fallbackData.status?.indicator || 'none';
+      let status = 'online';
+      if (indicator !== 'none') {
+        if (indicator === 'critical') status = 'offline';
+        else status = 'warning';
+      }
+      return { status };
+    } catch {
+      return { status: 'online' };
+    }
   }
 }
 
@@ -48,11 +70,18 @@ async function getGoogleCloudStatus() {
       return !i.end || (i.most_recent_update && i.most_recent_update.status !== 'AVAILABLE');
     });
     
-    if (active.length === 0) return 'online';
-    if (active.length > 0 && active.length <= 2) return 'warning';
-    return 'warning'; // 3+ también es warning, no offline
+    if (active.length === 0) return { status: 'online' };
+    
+    return { 
+      status: 'warning', 
+      incident: {
+        title: active[0].external_desc || 'Google Cloud Incident',
+        description: '',
+        status: 'Investigating'
+      }
+    };
   } catch (e) {
-    return 'online';
+    return { status: 'online' };
   }
 }
 
@@ -60,10 +89,10 @@ async function getSteamStatus() {
   try {
     const res = await fetch('https://steamstat.us/status.json', { next: { revalidate: 60 } });
     const data = await res.json();
-    if (data.services?.steam?.status === 'normal') return 'online';
-    return 'warning';
+    if (data.services?.steam?.status === 'normal') return { status: 'online' };
+    return { status: 'warning' };
   } catch (e) {
-    return 'online';
+    return { status: 'online' };
   }
 }
 
@@ -74,12 +103,12 @@ async function getIsDownStatus(service: string) {
       { next: { revalidate: 60 } }
     );
     const data = await res.json();
-    if (data.status === 'operational') return 'online';
-    if (data.status === 'degraded' || data.status === 'disruption') return 'warning';
-    if (data.status === 'outage') return 'offline';
-    return 'online';
+    if (data.status === 'operational') return { status: 'online' };
+    if (data.status === 'degraded' || data.status === 'disruption') return { status: 'warning' };
+    if (data.status === 'outage') return { status: 'offline' };
+    return { status: 'online' };
   } catch {
-    return 'online';
+    return { status: 'online' };
   }
 }
 
@@ -95,11 +124,11 @@ async function getPingStatus(url: string) {
     });
     clearTimeout(timeout);
     const latency = Date.now() - start;
-    if (!res.ok) return 'warning';
-    if (latency > 3000) return 'warning';
-    return 'online';
+    if (!res.ok) return { status: 'warning' };
+    if (latency > 3000) return { status: 'warning' };
+    return { status: 'online' };
   } catch {
-    return 'online'; 
+    return { status: 'online' }; 
   }
 }
 
@@ -137,7 +166,7 @@ export async function GET() {
     getPingStatus('https://signal.org'),
   ]);
 
-  const statusMap: Record<string, string> = Object.fromEntries(atlassianResults);
+  const statusMap: Record<string, any> = Object.fromEntries(atlassianResults);
   statusMap['google'] = googleStatus;
   statusMap['youtube'] = googleStatus;
   statusMap['gmail'] = googleStatus;
@@ -157,8 +186,8 @@ export async function GET() {
   // Falsos positivos: forzar online en servicios críticos si están en warning
   const ALWAYS_ONLINE = ['vercel', 'cloudflare'];
   ALWAYS_ONLINE.forEach(id => {
-    if (statusMap[id] === 'warning') {
-      statusMap[id] = 'online';
+    if (statusMap[id]?.status === 'warning') {
+      statusMap[id] = { status: 'online' };
     }
   });
 
