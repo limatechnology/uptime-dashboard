@@ -85,6 +85,36 @@ export function StatusCard({ service, isLoading: isGlobalLoading, lang }: Props)
         </div>
       </div>
 
+      {service.incident && (
+        <div className="mx-0 mt-1 p-3 bg-status-yellow/10 border border-status-yellow/20 rounded-xl relative z-10 transition-all group-hover:bg-status-yellow/15">
+          <div className="flex items-start gap-2">
+            <AlertTriangle className="w-4 h-4 text-status-yellow shrink-0 mt-0.5" />
+            <div className="flex flex-col gap-1">
+              <p className="text-[12px] font-bold text-status-yellow leading-tight">
+                {service.incident.title}
+              </p>
+              {service.incident.description && (
+                <p className="text-[11px] text-zinc-400 leading-normal">
+                  {service.incident.description}
+                </p>
+              )}
+              {service.incident.status && (
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+                    {service.incident.status}
+                  </span>
+                  {service.incident.updatedAt && (
+                    <span className="text-[10px] text-zinc-600">
+                      • {service.incident.updatedAt}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="mt-auto pt-2 border-t border-white/5 relative z-10">
         {securityAlert ? (
           <div className="flex items-center gap-1.5 text-[#f59e0b] font-semibold text-[11px]">

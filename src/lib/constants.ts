@@ -30,7 +30,22 @@ export const INITIAL_SERVICES: Service[] = [
   { id: 'microsoft', name: 'Microsoft 365', type: 'proxy', displayUrl: 'office.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(35), group: 'Infraestructura' },
   
   // IA
-  { id: 'openai', name: 'OpenAI / ChatGPT', type: 'public', displayUrl: 'openai.com', endpoint: 'https://status.openai.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(45), group: 'IA' },
+  { 
+    id: 'openai', 
+    name: 'OpenAI / ChatGPT', 
+    type: 'public', 
+    displayUrl: 'openai.com', 
+    endpoint: 'https://status.openai.com/api/v2/status.json', 
+    status: 'warning', 
+    history: Array(24).fill(1), 
+    latencyHistory: Array(10).fill(45), 
+    group: 'IA',
+    incident: {
+      title: "Elevated Errors Affecting ChatGPT Free and Guest Plan Users",
+      description: "We have applied the mitigation and are monitoring the recovery.",
+      status: "Monitoring · Degraded performance"
+    }
+  },
   { id: 'anthropic', name: 'Anthropic / Claude', type: 'public', displayUrl: 'anthropic.com', endpoint: 'https://status.anthropic.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(60), group: 'IA' },
 
   // STREAMING
