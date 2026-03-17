@@ -196,6 +196,48 @@ export async function GET() {
     }
   });
 
+  // ========== SIMULACIÓN DE ERRORES ==========
+  // 2 Servicios "Down" (Rojo)
+  statusMap['whatsapp'] = { 
+    status: 'offline', 
+    incident: { 
+      title: 'Interrupción Global (Simulada)', 
+      description: 'Los usuarios no pueden enviar ni recibir mensajes o contenido multimedia.\nNuestros ingenieros han identificado el problema en los servidores centrales.', 
+      status: 'Identificado',
+      updatedAt: 'Hace 5 minutos'
+    } 
+  };
+  statusMap['instagram'] = { 
+    status: 'offline', 
+    incident: { 
+      title: 'El feed de inicio no actualiza (Simulada)', 
+      description: 'El muro de publicaciones de los usuarios no carga nuevo contenido. Historias funcionan intermitentemente.', 
+      status: 'Investigando',
+      updatedAt: 'Hace 12 minutos'
+    } 
+  };
+
+  // 2 Servicios "Disrupted / Warning" (Ambar)
+  statusMap['github'] = { 
+    status: 'warning', 
+    incident: { 
+      title: 'Latencia elevada en API y Actions (Simulada)', 
+      description: 'Estamos observando tiempos de ejecución prolongados para GitHub Actions y demoras en Webhooks.', 
+      status: 'Monitoreando',
+      updatedAt: 'Hace 23 minutos'
+    } 
+  };
+  statusMap['discord'] = { 
+    status: 'warning', 
+    incident: { 
+      title: 'Desconexiones en canales de voz (Simulada)', 
+      description: 'Reportes de calidad de voz degradada y desconexiones esporádicas en regiones principales.\nAplicada ruta de mitigación.', 
+      status: 'Resuelto',
+      updatedAt: 'Hace 2 horas'
+    } 
+  };
+  // ===========================================
+
   return NextResponse.json({
     success: true,
     services: statusMap,
