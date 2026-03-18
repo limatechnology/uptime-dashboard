@@ -290,7 +290,7 @@ export function Dashboard() {
             initial={{ opacity: 0, y: -20, x: '-50%' }}
             animate={{ opacity: 1, y: 0, x: '-50%' }}
             exit={{ opacity: 0, y: -20, x: '-50%' }}
-            className="fixed top-8 left-1/2 -translate-x-1/2 z-[100] bg-[#1a1d27] border border-[#22c55e]/30 px-4 py-2 rounded-full flex items-center gap-2 shadow-2xl"
+            className="fixed top-8 left-1/2 z-[100] bg-[#1a1d27] border border-[#22c55e]/30 px-4 py-2 rounded-full flex items-center gap-2 shadow-2xl"
           >
             <CheckCircle2 size={14} className="text-[#22c55e]" />
             <span className="text-white text-xs font-bold uppercase tracking-widest">{lang === 'es' ? 'Actualizado' : 'Updated'}</span>
@@ -490,7 +490,7 @@ export function Dashboard() {
                       <ShieldAlert className="w-6 h-6 text-[#6C63FF]" />
                     </div>
                     <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white uppercase">
-                      {lang === 'es' ? 'Centro de Seguridad' : 'Security Center'}
+                      {lang === 'es' ? 'SEGURIDAD' : 'SECURITY'}
                     </h1>
                   </div>
 

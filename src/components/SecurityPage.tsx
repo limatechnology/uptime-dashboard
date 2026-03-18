@@ -249,7 +249,7 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
       </div>
 
       {/* Tabs Internas */}
-      <div className="flex items-center gap-2 p-1 bg-background-main border border-card-border rounded-2xl w-fit">
+      <div className="flex items-center gap-2 p-1 bg-background-main border border-card-border rounded-2xl w-full sm:w-fit overflow-x-auto no-scrollbar">
         {[
           { id: 'leaks', label: lang === 'es' ? 'Filtraciones' : 'Breaches' },
           { id: 'news', label: lang === 'es' ? 'Noticias' : 'News' },
@@ -261,8 +261,8 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
             onClick={() => setActiveTab(tab.id as Tab)}
             className={`px-6 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all ${
               activeTab === tab.id 
-              ? 'bg-[#6C63FF] text-white shadow-[0_4px_15px_rgba(108,99,255,0.3)]' 
-              : 'text-text-muted hover:text-white border border-transparent hover:border-[#6C63FF]/20'
+              ? 'bg-[#6C63FF] text-white shadow-[0_4px_15px_rgba(108,99,255,0.3)] shrink-0' 
+              : 'text-text-muted hover:text-white border border-transparent hover:border-[#6C63FF]/20 shrink-0'
             }`}
           >
             {tab.label}
