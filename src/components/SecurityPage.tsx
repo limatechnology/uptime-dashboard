@@ -244,7 +244,7 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder={lang === 'es' ? 'Buscar servicio, filtración o noticia...' : 'Search service, breach or news...'}
-          className="bg-card-bg/50 border border-card-border rounded-2xl py-4 pl-14 pr-8 text-[15px] font-semibold w-full outline-none focus:bg-card-bg focus:border-[#6C63FF]/50 soft-shadow transition-all duration-300 text-text-main placeholder:text-text-muted/40"
+          className="bg-card-bg/50 border border-card-border rounded-2xl py-[15.7px] pl-[54.9px] pr-[31.4px] text-[15px] font-semibold w-full outline-none focus:bg-card-bg focus:border-[#6C63FF]/50 soft-shadow transition-all duration-300 text-text-main placeholder:text-text-muted/40"
         />
       </div>
 
@@ -259,7 +259,7 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as Tab)}
-            className={`px-6 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all ${
+            className={`px-6 py-2.5 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all ${
               activeTab === tab.id 
               ? 'bg-[#6C63FF] text-white shadow-[0_4px_15px_rgba(108,99,255,0.3)] shrink-0' 
               : 'text-text-muted hover:text-white border border-transparent hover:border-[#6C63FF]/20 shrink-0'

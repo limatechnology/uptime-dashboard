@@ -293,7 +293,7 @@ export function Dashboard() {
             className="fixed top-8 left-1/2 z-[100] bg-[#1a1d27] border border-[#22c55e]/30 px-4 py-2 rounded-full flex items-center gap-2 shadow-2xl"
           >
             <CheckCircle2 size={14} className="text-[#22c55e]" />
-            <span className="text-white text-xs font-bold uppercase tracking-widest">{lang === 'es' ? 'Actualizado' : 'Updated'}</span>
+            <span className="text-white text-[11px] font-bold uppercase tracking-widest">{lang === 'es' ? 'Actualizado' : 'Updated'}</span>
           </motion.div>
         )}
       </AnimatePresence>
@@ -462,7 +462,7 @@ export function Dashboard() {
                     <div className="bg-[#0078D4]/10 p-3 rounded-2xl border border-[#0078D4]/20 shadow-[0_0_20px_rgba(0,120,212,0.1)]">
                       <Activity className="w-6 h-6 text-[#0078D4]" />
                     </div>
-                    <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white uppercase">
+                    <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white uppercase">
                       {t.dashboard}
                     </h1>
                   </div>
@@ -489,7 +489,7 @@ export function Dashboard() {
                     <div className="bg-[#6C63FF]/10 p-3 rounded-2xl border border-[#6C63FF]/20 shadow-[0_0_20px_rgba(108,99,255,0.1)]">
                       <ShieldAlert className="w-6 h-6 text-[#6C63FF]" />
                     </div>
-                    <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white uppercase">
+                    <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white uppercase">
                       {lang === 'es' ? 'SEGURIDAD' : 'SECURITY'}
                     </h1>
                   </div>
@@ -535,7 +535,7 @@ export function Dashboard() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t.searchPlaceholder}
-                  className="bg-card-bg/50 border border-card-border rounded-2xl py-4 pl-14 pr-8 text-[15px] font-semibold w-full outline-none focus:bg-card-bg focus:border-it-blue/50 soft-shadow transition-all duration-300 text-text-main placeholder:text-text-muted/40"
+                  className="bg-card-bg/50 border border-card-border rounded-2xl py-[15.7px] pl-[54.9px] pr-[31.4px] text-[15px] font-semibold w-full outline-none focus:bg-card-bg focus:border-it-blue/50 soft-shadow transition-all duration-300 text-text-main placeholder:text-text-muted/40"
                 />
               </div>
 
@@ -549,7 +549,7 @@ export function Dashboard() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveCat(tab.id)}
-                    className={`px-4 py-1.5 rounded-full text-[11px] font-black uppercase tracking-[0.05em] transition-all whitespace-nowrap border ${
+                    className={`px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-[0.05em] transition-all whitespace-nowrap border ${
                       activeCat === tab.id 
                       ? 'bg-it-blue text-white border-it-blue' 
                       : 'bg-card-bg text-text-muted hover:text-white border-card-border hover:border-it-blue/40'
