@@ -244,7 +244,7 @@ export function SecurityPage({ lang }: { lang: 'es' | 'en' }) {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder={lang === 'es' ? 'Buscar servicio, filtración o noticia...' : 'Search service, breach or news...'}
-          className="bg-card-bg/50 border border-card-border rounded-2xl py-[15.7px] pl-[54.9px] pr-[31.4px] text-[15px] font-semibold w-full outline-none focus:bg-card-bg focus:border-[#6C63FF]/50 soft-shadow transition-all duration-300 text-text-main placeholder:text-text-muted/40"
+          className="bg-card-bg/50 border border-card-border rounded-2xl py-3 pl-14 pr-8 text-[15px] font-semibold w-full outline-none focus:bg-card-bg focus:border-[#6C63FF]/50 soft-shadow transition-all duration-300 text-text-main placeholder:text-text-muted/40"
         />
       </div>
 

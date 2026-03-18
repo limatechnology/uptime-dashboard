@@ -459,8 +459,8 @@ export function Dashboard() {
               <div className="flex flex-col gap-4 animate-in">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="bg-[#0078D4]/10 p-3 rounded-2xl border border-[#0078D4]/20 shadow-[0_0_20px_rgba(0,120,212,0.1)]">
-                      <Activity className="w-6 h-6 text-[#0078D4]" />
+                    <div className="bg-[#0078D4]/10 p-2 rounded-2xl border border-[#0078D4]/20 shadow-[0_0_20px_rgba(0,120,212,0.1)]">
+                      <Activity className="w-5 h-5 text-[#0078D4]" />
                     </div>
                     <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white uppercase">
                       {t.dashboard}
@@ -468,7 +468,7 @@ export function Dashboard() {
                   </div>
 
                   {/* EN VIVO - Mobile Position */}
-                  <div className="lg:hidden flex items-center gap-2 px-3 py-1.5 bg-card-bg/40 border border-card-border rounded-full shadow-lg h-fit mt-1">
+                  <div className="lg:hidden flex items-center gap-2 px-4 py-1.5 bg-card-bg/40 border border-card-border rounded-full shadow-lg h-fit">
                     <div className="relative flex items-center justify-center w-2 h-2">
                       <span className="animate-radar absolute inline-flex w-full h-full rounded-full bg-lima-green/40 opacity-0"></span>
                       <span className="relative inline-flex w-1.5 h-1.5 rounded-full bg-lima-green"></span>
@@ -486,8 +486,8 @@ export function Dashboard() {
               <div className="flex flex-col gap-4 animate-in">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="bg-[#6C63FF]/10 p-3 rounded-2xl border border-[#6C63FF]/20 shadow-[0_0_20px_rgba(108,99,255,0.1)]">
-                      <ShieldAlert className="w-6 h-6 text-[#6C63FF]" />
+                    <div className="bg-[#6C63FF]/10 p-2 rounded-2xl border border-[#6C63FF]/20 shadow-[0_0_20px_rgba(108,99,255,0.1)]">
+                      <ShieldAlert className="w-5 h-5 text-[#6C63FF]" />
                     </div>
                     <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white uppercase">
                       {lang === 'es' ? 'SEGURIDAD' : 'SECURITY'}
@@ -495,7 +495,7 @@ export function Dashboard() {
                   </div>
 
                   {/* EN VIVO - Mobile Position (also for consistency) */}
-                  <div className="lg:hidden flex items-center gap-2 px-3 py-1.5 bg-card-bg/40 border border-card-border rounded-full shadow-lg h-fit mt-1">
+                  <div className="lg:hidden flex items-center gap-2 px-4 py-1.5 bg-card-bg/40 border border-card-border rounded-full shadow-lg h-fit">
                     <div className="relative flex items-center justify-center w-2 h-2">
                       <span className="animate-radar absolute inline-flex w-full h-full rounded-full bg-lima-green/40 opacity-0"></span>
                       <span className="relative inline-flex w-1.5 h-1.5 rounded-full bg-lima-green"></span>
@@ -535,7 +535,7 @@ export function Dashboard() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t.searchPlaceholder}
-                  className="bg-card-bg/50 border border-card-border rounded-2xl py-[15.7px] pl-[54.9px] pr-[31.4px] text-[15px] font-semibold w-full outline-none focus:bg-card-bg focus:border-it-blue/50 soft-shadow transition-all duration-300 text-text-main placeholder:text-text-muted/40"
+                  className="bg-card-bg/50 border border-card-border rounded-2xl py-3 pl-14 pr-8 text-[15px] font-semibold w-full outline-none focus:bg-card-bg focus:border-it-blue/50 soft-shadow transition-all duration-300 text-text-main placeholder:text-text-muted/40"
                 />
               </div>
 
