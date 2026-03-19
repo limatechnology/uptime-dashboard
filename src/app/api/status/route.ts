@@ -134,8 +134,9 @@ export async function GET(req: Request) {
   // Lista de servicios de prueba (en producción esto vendría de constants pero para la API lo manejamos así)
   const servicesToCheck = [
     { id: 'movistar', host: 'movistar.com.ar', priority: 'high' },
-    { id: 'flow', host: 'personalflow.com.ar', priority: 'high' },
-    { id: 'personal', host: 'personal.com.ar', priority: 'high' },
+    { id: 'flow', host: 'portal.app.flow.com.ar', priority: 'high' },
+    { id: 'personal-id', host: 'idpsesion.personal.com.ar', priority: 'high' },
+    { id: 'personal-api', host: 'api.personal.com.ar', priority: 'high' },
     { id: 'claro', host: 'claro.com.ar', priority: 'high' },
     { id: 'whatsapp', host: 'whatsapp.com', priority: 'medium' },
     { id: 'instagram', host: 'instagram.com', priority: 'medium' },
@@ -170,7 +171,7 @@ export async function GET(req: Request) {
   });
 
   // Detección Regional (ISPs Argentina)
-  const argIsps = ['movistar', 'flow', 'personal', 'claro'];
+  const argIsps = ['movistar', 'flow', 'personal-id', 'personal-api', 'claro'];
   const failedArgIsps = argIsps.filter(id => results[id]?.status === 'offline');
   
   let regionalAlert = false;

@@ -42,7 +42,7 @@ export function Dashboard() {
   const [mounted, setMounted] = useState(false);
   const POPULAR_SERVICES = [
     'whatsapp', 'instagram', 'youtube', 'gmail', 'discord', 'twitter', 'twitch', 
-    'openai', 'telegram', 'steam', 'movistar', 'personal', 'claro', 'flow'
+    'openai', 'telegram', 'steam', 'movistar', 'personal-id', 'personal-api', 'claro', 'flow'
   ];
 
   const [activeCat, setActiveCat] = useState('popular');

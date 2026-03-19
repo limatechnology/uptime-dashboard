@@ -3,8 +3,9 @@ import { Service } from "@/types";
 export const INITIAL_SERVICES: Service[] = [
   // TELECOMUNICACIONES
   { id: 'movistar', name: 'Movistar Argentina', type: 'proxy', displayUrl: 'movistar.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(22), group: 'Telecomunicaciones', priority: 'high' },
-  { id: 'flow', name: 'Personal Flow', type: 'proxy', displayUrl: 'personalflow.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(45), group: 'Telecomunicaciones', priority: 'high' },
-  { id: 'personal', name: 'Personal Argentina', type: 'proxy', displayUrl: 'personal.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(15), group: 'Telecomunicaciones', priority: 'high' },
+  { id: 'flow', name: 'Personal Flow Gateway', type: 'proxy', displayUrl: 'portal.app.flow.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(45), group: 'Telecomunicaciones', priority: 'high' },
+  { id: 'personal-id', name: 'Personal ID (Login)', type: 'proxy', displayUrl: 'idpsesion.personal.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(15), group: 'Telecomunicaciones', priority: 'high' },
+  { id: 'personal-api', name: 'Personal Gestión API', type: 'proxy', displayUrl: 'api.personal.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(12), group: 'Telecomunicaciones', priority: 'high' },
   { id: 'claro', name: 'Claro Argentina', type: 'proxy', displayUrl: 'claro.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(18), group: 'Telecomunicaciones', priority: 'high' },
   { id: 'starlink', name: 'Starlink', type: 'proxy', displayUrl: 'starlink.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(50), group: 'Telecomunicaciones', priority: 'medium' },
 
