@@ -55,6 +55,7 @@ export function Dashboard() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [hasNewNotifications, setHasNewNotifications] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [regionalAlert, setRegionalAlert] = useState(false);
   
   const notificationsRef = useRef<HTMLDivElement>(null);
   
@@ -74,24 +75,30 @@ export function Dashboard() {
       setIsLoading(true);
     }
     try {
-      const response = await fetch('/api/status');
+      const response = await fetch(`/api/status${isManual ? '?full=true' : ''}`);
       const data = await response.json();
       
       if (data.success && data.services) {
+        setRegionalAlert(data.regionalAlert || false);
         setServices(prev => prev.map(s => {
           const apiData = data.services[s.id];
           if (apiData) {
-            const apiStatus = typeof apiData === 'string' ? apiData : apiData.status;
-            const apiIncident = typeof apiData === 'object' ? apiData.incident : undefined;
+            const apiStatus = apiData.status;
             const historyValue = apiStatus === 'online' ? 1 : apiStatus === 'warning' ? 0.5 : 0;
-            const latency = apiStatus === 'online' ? Math.floor(Math.random() * 80) + 20 : 0;
+            const latency = apiData.latency || 0;
+            const lastFallback = apiData.lastFallback;
+            
+            // Detección de cambios instantánea (ya manejada por el polling de 15s)
+            
             return {
               ...s,
               status: apiStatus as any,
               latency,
               latencyHistory: updateServiceLatency(s, latency),
               history: [...s.history.slice(0, -1), historyValue],
-              incident: apiStatus === 'online' ? undefined : (apiIncident || undefined)
+              lastFallback,
+              lastCheckTimestamp: Date.now(),
+              consecutiveFailures: apiStatus === 'offline' ? (s.consecutiveFailures || 0) + 1 : 0
             };
           }
           return s;
@@ -143,8 +150,8 @@ export function Dashboard() {
     fetchStatus(false);
     fetchNotifications();
     
-    const statusInterval = setInterval(() => fetchStatus(false), 300000); // 5 minutes
-    const syncInterval = setInterval(updateSyncTime, 10000);
+    const statusInterval = setInterval(() => fetchStatus(false), 60000); // 1 minute as requested
+    const syncInterval = setInterval(updateSyncTime, 1000); // More frequent sync update
     const notificationsInterval = setInterval(fetchNotifications, 3600000); // 1 hour
     
     return () => {
@@ -294,6 +301,24 @@ export function Dashboard() {
           >
             <CheckCircle2 size={14} className="text-[#22c55e]" />
             <span className="text-white text-[11px] font-bold uppercase tracking-widest">{lang === 'es' ? 'Actualizado' : 'Updated'}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* regional alert toast */}
+      <AnimatePresence>
+        {regionalAlert && (
+          <motion.div 
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[110] bg-status-red border border-white/20 px-6 py-3 rounded-2xl flex items-center gap-3 shadow-2xl"
+          >
+            <AlertTriangle size={20} className="text-white animate-pulse" />
+            <div className="flex flex-col">
+              <span className="text-white text-[12px] font-black uppercase tracking-widest">ALERTA REGIONAL</span>
+              <span className="text-white/80 text-[10px] font-bold">Posible problema masivo en ISPs de Argentina</span>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

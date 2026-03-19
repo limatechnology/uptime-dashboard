@@ -192,7 +192,7 @@ export function StatusCard({ service, isLoading: isGlobalLoading, lang }: Props)
         </div>
       </div>
 
-      <div className="mt-auto pt-3 border-t border-white/5 relative z-10">
+      <div className="mt-auto pt-3 border-t border-white/5 relative z-10 flex flex-col gap-2">
         {securityAlert ? (
           <div className="flex items-center gap-1.5 text-[#f59e0b] font-semibold text-[11px]">
              <span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b] shrink-0" />
@@ -205,6 +205,18 @@ export function StatusCard({ service, isLoading: isGlobalLoading, lang }: Props)
              <span className="truncate">{t.noIssues}</span>
           </div>
         )}
+        
+        {/* Monitoring metadata */}
+        <div className="flex items-center justify-between opacity-40 group-hover:opacity-80 transition-opacity mt-1">
+          <span className="text-[8px] font-mono text-zinc-500 uppercase tracking-tighter">
+            {service.lastFallback || 'ping'} check • {service.latency || 0}ms
+          </span>
+          {service.consecutiveFailures && service.consecutiveFailures > 0 ? (
+            <span className="text-[8px] font-bold text-status-red uppercase tracking-tighter">
+               ⚠️ {service.consecutiveFailures} hits
+            </span>
+          ) : null}
+        </div>
       </div>
 
       <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none" />

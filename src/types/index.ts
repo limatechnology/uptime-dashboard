@@ -15,12 +15,19 @@ export interface Service {
   displayUrl: string;
   status: ServiceStatus;
   latency?: number;
-  latencyHistory: number[]; // Store recent latency points
+  latencyHistory: number[];
   lastUpdated?: string;
-  history: number[]; // 0 to 1 values for uptime
+  history: number[];
   group: 'IA' | 'Mensajería' | 'Redes Sociales' | 'Infraestructura' | 'Streaming' | 'Juegos' | 'Telecomunicaciones' | 'Desarrollo';
   incident?: Incident;
+  
+  // Monitoring specific fields
+  priority?: 'high' | 'medium' | 'low';
+  lastFallback?: 'dns' | 'statusPage' | 'api' | 'homepage' | 'ping';
+  consecutiveFailures?: number;
+  lastCheckTimestamp?: number;
 }
+
 
 export interface DashboardData {
   services: Service[];

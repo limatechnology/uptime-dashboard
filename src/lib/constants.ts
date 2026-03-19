@@ -2,33 +2,33 @@ import { Service } from "@/types";
 
 export const INITIAL_SERVICES: Service[] = [
   // TELECOMUNICACIONES
-  { id: 'movistar', name: 'Movistar Argentina', type: 'proxy', displayUrl: 'movistar.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(22), group: 'Telecomunicaciones' },
-  { id: 'flow', name: 'Personal Flow', type: 'proxy', displayUrl: 'personalflow.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(45), group: 'Telecomunicaciones' },
-  { id: 'personal', name: 'Personal Argentina', type: 'proxy', displayUrl: 'personal.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(15), group: 'Telecomunicaciones' },
-  { id: 'claro', name: 'Claro Argentina', type: 'proxy', displayUrl: 'claro.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(18), group: 'Telecomunicaciones' },
-  { id: 'starlink', name: 'Starlink', type: 'proxy', displayUrl: 'starlink.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(50), group: 'Telecomunicaciones' },
+  { id: 'movistar', name: 'Movistar Argentina', type: 'proxy', displayUrl: 'movistar.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(22), group: 'Telecomunicaciones', priority: 'high' },
+  { id: 'flow', name: 'Personal Flow', type: 'proxy', displayUrl: 'personalflow.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(45), group: 'Telecomunicaciones', priority: 'high' },
+  { id: 'personal', name: 'Personal Argentina', type: 'proxy', displayUrl: 'personal.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(15), group: 'Telecomunicaciones', priority: 'high' },
+  { id: 'claro', name: 'Claro Argentina', type: 'proxy', displayUrl: 'claro.com.ar', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(18), group: 'Telecomunicaciones', priority: 'high' },
+  { id: 'starlink', name: 'Starlink', type: 'proxy', displayUrl: 'starlink.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(50), group: 'Telecomunicaciones', priority: 'medium' },
 
   // MENSAJERÍA
-  { id: 'whatsapp', name: 'WhatsApp', type: 'proxy', displayUrl: 'whatsapp.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(15), group: 'Mensajería' },
-  { id: 'telegram', name: 'Telegram Messenger', type: 'proxy', displayUrl: 'telegram.org', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(25), group: 'Mensajería' },
-  { id: 'signal', name: 'Signal Messenger', type: 'proxy', displayUrl: 'signal.org', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(20), group: 'Mensajería' },
-  { id: 'discord', name: 'Discord', type: 'public', displayUrl: 'discord.com', endpoint: 'https://discordstatus.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(30), group: 'Mensajería' },
-  { id: 'gmail', name: 'Gmail', type: 'proxy', displayUrl: 'mail.google.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(20), group: 'Mensajería' },
+  { id: 'whatsapp', name: 'WhatsApp', type: 'proxy', displayUrl: 'whatsapp.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(15), group: 'Mensajería', priority: 'medium' },
+  { id: 'telegram', name: 'Telegram Messenger', type: 'proxy', displayUrl: 'telegram.org', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(25), group: 'Mensajería', priority: 'medium' },
+  { id: 'signal', name: 'Signal Messenger', type: 'proxy', displayUrl: 'signal.org', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(20), group: 'Mensajería', priority: 'low' },
+  { id: 'discord', name: 'Discord', type: 'public', displayUrl: 'discord.com', endpoint: 'https://discordstatus.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(30), group: 'Mensajería', priority: 'medium' },
+  { id: 'gmail', name: 'Gmail', type: 'proxy', displayUrl: 'mail.google.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(20), group: 'Mensajería', priority: 'medium' },
 
   // REDES SOCIALES
-  { id: 'twitter', name: 'X / Twitter', type: 'proxy', displayUrl: 'x.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(40), group: 'Redes Sociales' },
-  { id: 'instagram', name: 'Instagram', type: 'proxy', displayUrl: 'instagram.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(25), group: 'Redes Sociales' },
-  { id: 'facebook', name: 'Facebook', type: 'proxy', displayUrl: 'facebook.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(25), group: 'Redes Sociales' },
+  { id: 'twitter', name: 'X / Twitter', type: 'proxy', displayUrl: 'x.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(40), group: 'Redes Sociales', priority: 'medium' },
+  { id: 'instagram', name: 'Instagram', type: 'proxy', displayUrl: 'instagram.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(25), group: 'Redes Sociales', priority: 'medium' },
+  { id: 'facebook', name: 'Facebook', type: 'proxy', displayUrl: 'facebook.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(25), group: 'Redes Sociales', priority: 'medium' },
 
   // DESARROLLO
-  { id: 'github', name: 'GitHub', type: 'public', displayUrl: 'github.com', endpoint: 'https://www.githubstatus.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(25), group: 'Desarrollo' },
-  { id: 'vercel', name: 'Vercel', type: 'public', displayUrl: 'vercel-status.com', endpoint: 'https://www.vercel-status.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(15), group: 'Desarrollo' },
+  { id: 'github', name: 'GitHub', type: 'public', displayUrl: 'github.com', endpoint: 'https://www.githubstatus.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(25), group: 'Desarrollo', priority: 'medium' },
+  { id: 'vercel', name: 'Vercel', type: 'public', displayUrl: 'vercel-status.com', endpoint: 'https://www.vercel-status.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(15), group: 'Desarrollo', priority: 'medium' },
 
   // INFRAESTRUCTURA
-  { id: 'cloudflare', name: 'Cloudflare', type: 'public', displayUrl: 'cloudflarestatus.com', endpoint: 'https://www.cloudflarestatus.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(10), group: 'Infraestructura' },
-  { id: 'aws', name: 'Amazon Web Services', type: 'proxy', displayUrl: 'health.aws.amazon.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(15), group: 'Infraestructura' },
-  { id: 'google', name: 'Google Cloud / Services', type: 'proxy', displayUrl: 'google.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(10), group: 'Infraestructura' },
-  { id: 'microsoft', name: 'Microsoft 365', type: 'proxy', displayUrl: 'office.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(35), group: 'Infraestructura' },
+  { id: 'cloudflare', name: 'Cloudflare', type: 'public', displayUrl: 'cloudflarestatus.com', endpoint: 'https://www.cloudflarestatus.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(10), group: 'Infraestructura', priority: 'medium' },
+  { id: 'aws', name: 'Amazon Web Services', type: 'proxy', displayUrl: 'health.aws.amazon.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(15), group: 'Infraestructura', priority: 'medium' },
+  { id: 'google', name: 'Google Cloud / Services', type: 'proxy', displayUrl: 'google.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(10), group: 'Infraestructura', priority: 'medium' },
+  { id: 'microsoft', name: 'Microsoft 365', type: 'proxy', displayUrl: 'office.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(35), group: 'Infraestructura', priority: 'low' },
   
   // IA
   { 
@@ -40,19 +40,20 @@ export const INITIAL_SERVICES: Service[] = [
     status: 'warning', 
     history: Array(24).fill(1), 
     latencyHistory: Array(10).fill(45), 
-    group: 'IA'
+    group: 'IA',
+    priority: 'medium'
   },
-  { id: 'anthropic', name: 'Anthropic / Claude', type: 'public', displayUrl: 'anthropic.com', endpoint: 'https://status.anthropic.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(60), group: 'IA' },
+  { id: 'anthropic', name: 'Anthropic / Claude', type: 'public', displayUrl: 'anthropic.com', endpoint: 'https://status.anthropic.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(60), group: 'IA', priority: 'medium' },
 
   // STREAMING
-  { id: 'youtube', name: 'YouTube', type: 'proxy', displayUrl: 'youtube.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(20), group: 'Streaming' },
-  { id: 'twitch', name: 'Twitch', type: 'public', displayUrl: 'twitch.tv', endpoint: 'https://status.twitch.tv/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(35), group: 'Streaming' },
-  { id: 'kick', name: 'Kick', type: 'proxy', displayUrl: 'kick.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(40), group: 'Streaming' },
+  { id: 'youtube', name: 'YouTube', type: 'proxy', displayUrl: 'youtube.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(20), group: 'Streaming', priority: 'medium' },
+  { id: 'twitch', name: 'Twitch', type: 'public', displayUrl: 'twitch.tv', endpoint: 'https://status.twitch.tv/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(35), group: 'Streaming', priority: 'medium' },
+  { id: 'kick', name: 'Kick', type: 'proxy', displayUrl: 'kick.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(40), group: 'Streaming', priority: 'low' },
 
   // JUEGOS
-  { id: 'steam', name: 'Steam', type: 'proxy', displayUrl: 'steampowered.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(30), group: 'Juegos' },
-  { id: 'epic', name: 'Epic Games', type: 'public', displayUrl: 'epicgames.com', endpoint: 'https://status.epicgames.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(40), group: 'Juegos' },
-  { id: 'battlenet', name: 'Battle.net', type: 'proxy', displayUrl: 'battle.net', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(50), group: 'Juegos' },
+  { id: 'steam', name: 'Steam', type: 'proxy', displayUrl: 'steampowered.com', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(30), group: 'Juegos', priority: 'low' },
+  { id: 'epic', name: 'Epic Games', type: 'public', displayUrl: 'epicgames.com', endpoint: 'https://status.epicgames.com/api/v2/status.json', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(40), group: 'Juegos', priority: 'low' },
+  { id: 'battlenet', name: 'Battle.net', type: 'proxy', displayUrl: 'battle.net', status: 'loading', history: Array(24).fill(1), latencyHistory: Array(10).fill(50), group: 'Juegos', priority: 'low' },
 ];
 
 export const SECURITY_ALERTS: Record<string, string> = {
