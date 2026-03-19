@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dns from 'dns';
 import { promisify } from 'util';
+import { INITIAL_SERVICES } from '@/lib/constants';
 
 const resolve4 = promisify(dns.resolve4);
 
@@ -131,25 +132,13 @@ export async function GET(req: Request) {
 
   const startTime = Date.now();
 
-  // Lista de servicios de prueba (en producción esto vendría de constants pero para la API lo manejamos así)
-  const servicesToCheck = [
-    { id: 'movistar', host: 'movistar.com.ar', priority: 'high' },
-    { id: 'flow', host: 'portal.app.flow.com.ar', priority: 'high' },
-    { id: 'personal-id', host: 'idpsesion.personal.com.ar', priority: 'high' },
-    { id: 'personal-api', host: 'api.personal.com.ar', priority: 'high' },
-    { id: 'claro', host: 'claro.com.ar', priority: 'high' },
-    { id: 'whatsapp', host: 'whatsapp.com', priority: 'medium' },
-    { id: 'instagram', host: 'instagram.com', priority: 'medium' },
-    { id: 'discord', host: 'discord.com', priority: 'medium', endpoint: 'https://discordstatus.com/api/v2/status.json' },
-    { id: 'youtube', host: 'youtube.com', priority: 'medium' },
-    { id: 'github', host: 'github.com', priority: 'low', endpoint: 'https://www.githubstatus.com/api/v2/status.json' },
-    { id: 'google', host: 'google.com', priority: 'low' },
-    { id: 'twitter', host: 'x.com', priority: 'medium' },
-    { id: 'telegram', host: 'telegram.org', priority: 'medium' },
-    { id: 'steam', host: 'steampowered.com', priority: 'low' },
-    { id: 'openai', host: 'openai.com', priority: 'medium', endpoint: 'https://status.openai.com/api/v2/status.json' },
-    { id: 'cloudflare', host: 'cloudflare.com', priority: 'low', endpoint: 'https://www.cloudflarestatus.com/api/v2/status.json' },
-  ];
+  // Usamos los servicios definidos en INITIAL_SERVICES para mantener la sincronización
+  const servicesToCheck = INITIAL_SERVICES.map(s => ({
+    id: s.id,
+    host: s.displayUrl,
+    priority: s.priority,
+    endpoint: s.endpoint
+  }));
 
   const results: Record<string, any> = {};
   

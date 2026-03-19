@@ -51,19 +51,21 @@ export function StatusCard({ service, isLoading: isGlobalLoading, lang }: Props)
     return t.checking;
   };
 
-  const pillStyles = isOnline 
-    ? "text-status-green border-status-green/20" 
-    : isWarning 
-      ? "text-status-yellow border-status-yellow/20"
-      : "text-status-red border-status-red/20";
+  const pillStyles = isLoading
+    ? "text-text-muted border-white/10 bg-white/5"
+    : isOnline 
+      ? "text-status-green border-status-green/20" 
+      : isWarning 
+        ? "text-status-yellow border-status-yellow/20"
+        : "text-status-red border-status-red/20";
 
-  const dotColor = isOnline ? "bg-[#22c55e]" : isWarning ? "bg-[#f59e0b]" : "bg-[#ef4444]";
+  const dotColor = isLoading ? "bg-zinc-600" : isOnline ? "bg-[#22c55e]" : isWarning ? "bg-[#f59e0b]" : "bg-[#ef4444]";
 
-  const leftBorder = !isOnline 
+  const leftBorder = !isOnline && !isLoading
     ? (isOffline ? "border-l-status-red" : "border-l-status-yellow") + " border-l-[3.5px]" 
     : "";
 
-  const displayIncident = !isOnline;
+  const displayIncident = !isOnline && !isLoading;
   
   const getIncidentData = () => {
     if (service.incident) {
