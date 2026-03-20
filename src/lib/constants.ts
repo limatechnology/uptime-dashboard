@@ -38,7 +38,7 @@ export const INITIAL_SERVICES: Service[] = [
     type: 'public', 
     displayUrl: 'openai.com', 
     endpoint: 'https://status.openai.com/api/v2/status.json', 
-    status: 'warning', 
+    status: 'loading', 
     history: Array(24).fill(1), 
     latencyHistory: Array(10).fill(45), 
     group: 'IA',

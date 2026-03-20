@@ -147,12 +147,12 @@ export function Dashboard() {
 
   useEffect(() => {
     setMounted(true);
-    fetchStatus(false);
+    fetchStatus(true); // Se inicia con carga completa
     fetchNotifications();
     
-    const statusInterval = setInterval(() => fetchStatus(false), 60000); // 1 minute as requested
-    const syncInterval = setInterval(updateSyncTime, 1000); // More frequent sync update
-    const notificationsInterval = setInterval(fetchNotifications, 3600000); // 1 hour
+    const statusInterval = setInterval(() => fetchStatus(false), 60000); 
+    const syncInterval = setInterval(updateSyncTime, 1000); 
+    const notificationsInterval = setInterval(fetchNotifications, 3600000); 
     
     return () => {
       clearInterval(statusInterval);
