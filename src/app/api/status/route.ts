@@ -3,7 +3,7 @@ import dns from 'dns';
 import { promisify } from 'util';
 import { INITIAL_SERVICES } from '@/lib/constants';
 
-const resolve4 = promisify(dns.resolve4);
+const dnsLookup = promisify(dns.lookup);
 
 // CONFIGURACIÓN DE TIEMPOS
 const TIMEOUTS = {
@@ -25,9 +25,6 @@ const PUBLIC_STATUS_PAGES: Record<string, string> = {
   epic: 'https://status.epicgames.com/api/v2/status.json',
   vercel: 'https://www.vercel-status.com/api/v2/status.json',
   cloudflare: 'https://www.cloudflarestatus.com/api/v2/status.json',
-  microsoft: 'https://azure.status.microsoft/api/v2/status.json',
-  battlenet: 'https://status.blizzard.com/api/v2/status.json',
-  kick: 'https://status.kick.com/api/v2/status.json',
 };
 
 // Ayudante para fetch con timeout
@@ -48,55 +45,63 @@ async function fetchWithTimeout(url: string, options: any = {}, timeout: number 
   }
 }
 
-// 1. DNS Check
+// 1. DNS Check (Usando lookup para mayor compatibilidad)
 async function checkDNS(host: string): Promise<boolean> {
   try {
     const p = Promise.race([
-      resolve4(host),
+      dnsLookup(host),
       new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), TIMEOUTS.DNS))
     ]);
-    await p;
+    await p; // dnsLookup returns an object { address, family }
     return true;
   } catch {
     return false;
   }
 }
 
-// 2. Fallbacks inteligentes
+// 2. Fallbacks inteligentes y detección de degradación
 async function checkServiceStatus(id: string, displayUrl: string, endpoint?: string) {
   const host = displayUrl.replace(/^https?:\/\//, '').split('/')[0];
   const startTime = Date.now();
-  let lastUsed: 'dns' | 'statusPage' | 'api' | 'homepage' | 'ping' = 'dns';
+  let lastUsed: 'dns' | 'statusPage' | 'api' | 'homepage' = 'dns';
 
   try {
-    // Primero: DNS check
+    // A. Si tiene Status Page (JSON de Atlassian Statuspage o similar)
+    const statusUrl = PUBLIC_STATUS_PAGES[id] || endpoint;
+    if (statusUrl && statusUrl.includes('/api/v2/status.json')) {
+      lastUsed = 'statusPage';
+      try {
+        const res = await fetchWithTimeout(statusUrl, { method: 'GET' }, TIMEOUTS.STATUS_PAGE);
+        if (res.ok) {
+          const data = await res.json();
+          const indicator = data.status?.indicator || 'none';
+          
+          if (indicator === 'none') {
+            return { status: 'online', latency: Date.now() - startTime, lastUsed: 'statusPage' };
+          } else if (indicator === 'minor' || indicator === 'warning') {
+            return { status: 'warning', latency: Date.now() - startTime, lastUsed: 'statusPage' };
+          } else {
+            return { status: 'offline', latency: Date.now() - startTime, lastUsed: 'statusPage' };
+          }
+        }
+      } catch (err) {
+        console.warn(`[StatusPage Error] ${id}:`, err instanceof Error ? err.message : 'Unknown');
+      }
+    }
+
+    // B. Si es proxy o falló lo anterior, probamos DNS Check (Mantiene alta performance)
     if (await checkDNS(host)) {
       return { status: 'online', latency: Date.now() - startTime, lastUsed: 'dns' };
     }
 
-    // Si falla: HEAD request a status page (si es public)
-    if (PUBLIC_STATUS_PAGES[id]) {
-      lastUsed = 'statusPage';
-      try {
-        const res = await fetchWithTimeout(PUBLIC_STATUS_PAGES[id], { method: 'HEAD' }, TIMEOUTS.STATUS_PAGE);
-        if (res.ok) return { status: 'online', latency: Date.now() - startTime, lastUsed: 'statusPage' };
-      } catch {}
-    }
-
-    // Si falla: GET a API endpoint
-    if (endpoint) {
-      lastUsed = 'api';
-      try {
-        const res = await fetchWithTimeout(endpoint, { method: 'GET' }, TIMEOUTS.API);
-        if (res.ok) return { status: 'online', latency: Date.now() - startTime, lastUsed: 'api' };
-      } catch {}
-    }
-
-    // Si falla: HEAD request a homepage
+    // C. HEAD request a homepage (Check real de servidor web)
     lastUsed = 'homepage';
     try {
       const res = await fetchWithTimeout(`https://${displayUrl}`, { method: 'HEAD' }, TIMEOUTS.HOMEPAGE);
-      if (res.ok) return { status: 'online', latency: Date.now() - startTime, lastUsed: 'homepage' };
+      // Incluimos 2xx y 3xx (redirecciones) como "online" ya que el servidor está respondiendo
+      if (res.ok || (res.status >= 300 && res.status < 400)) {
+        return { status: 'online', latency: Date.now() - startTime, lastUsed: 'homepage' };
+      }
     } catch {}
 
     return { status: 'offline', latency: Date.now() - startTime, lastUsed };
