@@ -97,6 +97,7 @@ export function Dashboard() {
               latencyHistory: updateServiceLatency(s, latency),
               history: [...s.history.slice(0, -1), historyValue],
               lastFallback,
+              incident: apiData.incident,
               lastCheckTimestamp: Date.now(),
               consecutiveFailures: apiStatus === 'offline' ? (s.consecutiveFailures || 0) + 1 : 0
             };

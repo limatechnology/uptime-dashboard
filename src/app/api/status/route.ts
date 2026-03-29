@@ -67,22 +67,66 @@ async function checkServiceStatus(id: string, displayUrl: string, endpoint?: str
 
   try {
     // A. Si tiene Status Page (JSON de Atlassian Statuspage o similar)
-    const statusUrl = PUBLIC_STATUS_PAGES[id] || endpoint;
-    if (statusUrl && statusUrl.includes('/api/v2/status.json')) {
+    // Intentamos summary.json primero para tener detalles si hay problemas
+    const statusUrl = (PUBLIC_STATUS_PAGES[id] || endpoint)?.replace('status.json', 'summary.json');
+    
+    if (statusUrl && statusUrl.includes('/api/v2/summary.json')) {
       lastUsed = 'statusPage';
       try {
         const res = await fetchWithTimeout(statusUrl, { method: 'GET' }, TIMEOUTS.STATUS_PAGE);
         if (res.ok) {
           const data = await res.json();
           const indicator = data.status?.indicator || 'none';
-          
-          if (indicator === 'none') {
-            return { status: 'online', latency: Date.now() - startTime, lastUsed: 'statusPage' };
-          } else if (indicator === 'minor' || indicator === 'warning') {
-            return { status: 'warning', latency: Date.now() - startTime, lastUsed: 'statusPage' };
-          } else {
-            return { status: 'offline', latency: Date.now() - startTime, lastUsed: 'statusPage' };
+          const incidents = data.incidents || [];
+          const components = data.components || [];
+
+          // Caso especial: indicator minor pero sin incidentes activos
+          // Probablemente es un problema localizado o programado menor
+          let effectiveStatus: 'online' | 'warning' | 'offline' = 'online';
+          if (indicator === 'minor' || indicator === 'warning') {
+            // Si hay incidentes activos, es warning seguro
+            if (incidents.length > 0) {
+              effectiveStatus = 'warning';
+            } else {
+              // Si no hay incidentes, solo es warning si más de 2 componentes o componentes core tienen fallas
+              const degradedCount = components.filter((c: any) => c.status !== 'operational').length;
+              if (degradedCount > 3) {
+                effectiveStatus = 'warning';
+              } else {
+                effectiveStatus = 'online'; // Relaxed check
+              }
+            }
+          } else if (indicator === 'critical' || indicator === 'major') {
+            effectiveStatus = 'offline';
           }
+
+          let incidentInfo = undefined;
+          if (incidents.length > 0) {
+            const activeIncident = incidents[0];
+            incidentInfo = {
+              title: activeIncident.name,
+              description: activeIncident.incident_updates?.[0]?.body,
+              status: activeIncident.status,
+              updatedAt: activeIncident.updated_at
+            };
+          } else if (effectiveStatus === 'warning' || (indicator !== 'none' && effectiveStatus === 'online')) {
+            // Note about degraded components if no incident
+            const degraded = components.filter((c: any) => c.status !== 'operational');
+            if (degraded.length > 0) {
+              incidentInfo = {
+                title: 'Problemas localizados',
+                description: `Se detectaron problemas en: ${degraded.slice(0, 2).map((c: any) => c.name).join(', ')}${degraded.length > 2 ? ' y otros' : ''}. El servicio general debería funcionar.`,
+                status: 'degraded'
+              };
+            }
+          }
+
+          return { 
+            status: effectiveStatus, 
+            latency: Date.now() - startTime, 
+            lastUsed: 'statusPage',
+            incident: incidentInfo
+          };
         }
       } catch (err) {
         console.warn(`[StatusPage Error] ${id}:`, err instanceof Error ? err.message : 'Unknown');
@@ -98,7 +142,6 @@ async function checkServiceStatus(id: string, displayUrl: string, endpoint?: str
     lastUsed = 'homepage';
     try {
       const res = await fetchWithTimeout(`https://${displayUrl}`, { method: 'HEAD' }, TIMEOUTS.HOMEPAGE);
-      // Incluimos 2xx y 3xx (redirecciones) como "online" ya que el servidor está respondiendo
       if (res.ok || (res.status >= 300 && res.status < 400)) {
         return { status: 'online', latency: Date.now() - startTime, lastUsed: 'homepage' };
       }
@@ -160,6 +203,7 @@ export async function GET(req: Request) {
       status: r.status,
       latency: r.latency,
       lastFallback: r.lastUsed,
+      incident: r.incident,
       timestamp: new Date().toISOString()
     };
   });
